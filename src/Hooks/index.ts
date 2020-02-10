@@ -11,20 +11,20 @@ export const useWoodyPlantsLoader = (
   initialSort: WoodyPlantSortModel
 ): [
   WoodyPlantListModel | null,
-  (flter: WoodyPlantFilterModel, sort: WoodyPlantSortModel) => void
+  (flter: WoodyPlantFilterModel, sort: WoodyPlantSortModel) => Promise<void>
 ] => {
   var [list, setList] = useState(null as WoodyPlantListModel | null);
 
   const fetchPlantsAsync = async (
     filter: WoodyPlantFilterModel,
     sort: WoodyPlantSortModel
-  ) => {
+  ): Promise<void> => {
     setList(await getWoodyPlantsByFilterAsync(filter, sort));
   };
 
   useEffect(() => {
     fetchPlantsAsync(initialFilter, initialSort);
-  });
+  }, [initialFilter, initialSort]);
 
   return [list, fetchPlantsAsync];
 };

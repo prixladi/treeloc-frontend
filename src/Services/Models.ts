@@ -11,8 +11,10 @@ export type WoodyPlantFilterModel = {
   distance?: number;
 };
 
+export type SortBy = 'LocalizedNames' | 'LocalizedNotes' | 'LocalizedSpecies' | 'TextMatchScore';
+
 export type WoodyPlantSortModel = {
-  sortBy?: 'LocalizedNames' | 'LocalizedNotes' | 'LocalizedSpecies' | 'TextMatchScore',
+  sortBy?: SortBy,
   ascending: boolean
 };
 

@@ -20,7 +20,7 @@ const NavBar = ({ history, location }: Props) => (
     }}
   >
     <Menu.Item key={_List}>
-      <Icon type="home" />
+      <Icon type="ordered-list" />
       Seznam dřevin
     </Menu.Item>
 
