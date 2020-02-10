@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
+import MapPage from "./MapPage";
+import ListPage from "./ListPage";
+
+import "./App.css";
+import { _List, _Map } from "./Routes";
+import { NavBar } from "./NavBar";
+
+import 'antd/dist/antd.css';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Router>
+      <NavBar />
+      <Switch>
+        <Route exact path="/">
+          <Redirect to={_List} />
+        </Route>
+        <Route exact path={_Map}>
+          <MapPage />
+        </Route>
+        <Route exact path={_List}>
+          <ListPage />
+        </Route>
+      </Switch>
+    </Router>
+    </>
   );
-}
+};
 
 export default App;
