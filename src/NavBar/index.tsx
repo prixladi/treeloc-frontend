@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Menu, Icon } from "antd";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { ClickParam } from "antd/lib/menu";
@@ -6,29 +6,37 @@ import { _Map, _List } from "../Routes";
 
 type Props = RouteComponentProps<any>;
 
-const NavBar = ({ history, location }: Props) => {
-  const [key, setKey] = useState();
+const NavBar = ({ history, location }: Props) => (
+  <Menu
+    onClick={(e: ClickParam) => {
+      if (location.pathname !== e.key && e.key.startsWith("/"))
+        history.push(e.key);
+    }}
+    selectedKeys={[location.pathname]}
+    mode="horizontal"
+    theme="dark"
+    style={{
+      fontSize: 20
+    }}
+  >
+    <Menu.Item key={_List}>
+      <Icon type="home" />
+      Seznam dřevin
+    </Menu.Item>
 
-  return (
-    <Menu
-      onClick={(e: ClickParam) => {
-        if (location.pathname !== e.key) history.push(e.key);
-      }}
-      selectedKeys={[location.pathname]}
-      mode="horizontal"
-      theme="dark"
-    >
-      <Menu.Item key={_Map}>
-        <Icon type="map" />
-        Mapa dřevin
-      </Menu.Item>
-      <Menu.Item key={_List}>
-        <Icon type="home" />
-        Seznam dřevin
-      </Menu.Item>
-    </Menu>
-  );
-};
+    <Menu.Item key={_Map}>
+      <Icon type="global" />
+      Mapa dřevin
+    </Menu.Item>
+
+    <Menu.Item style={{ float: "right" }}>
+      <a href="https://github.com/prixladi/treeloc">
+        <Icon type="github" />
+        Github repozitář
+      </a>
+    </Menu.Item>
+  </Menu>
+);
 
 const navBartWithRouter = withRouter(NavBar);
 
