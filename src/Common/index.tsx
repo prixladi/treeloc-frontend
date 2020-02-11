@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect } from 'react';
 
 type PageProps = {
   title: string;

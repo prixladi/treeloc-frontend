@@ -7,12 +7,8 @@ import {
 } from "react-router-dom";
 import MapPage from "./MapPage";
 import ListPage from "./ListPage";
-
-import "./App.css";
 import { _List, _Map } from "./Routes";
 import { NavBar } from "./NavBar";
-
-import 'antd/dist/antd.css';
 
 const App: React.FC = () => {
   return (

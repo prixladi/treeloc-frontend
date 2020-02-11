@@ -10,21 +10,22 @@ import {
   WoodyPlantSortModel
 } from '../Services/Models';
 import Column from 'antd/lib/table/Column';
-import './index.css';
 import { ResponsiveSearch } from './styled';
 
-const initialFilter: WoodyPlantFilterModel = { skip: 0, take: 15 };
+const initialFilter: WoodyPlantFilterModel = { skip: 0, take: 14 };
 const initialSort: WoodyPlantSortModel = { ascending: true };
 
 const ListPage: React.FC = () => {
-  const [page, setPage] = useState(1);
   const [list, loadAsync] = useWoodyPlantsLoader(initialFilter, initialSort);
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState(initialFilter);
   const [sort, setSort] = useState(initialSort);
   const [loading, setLoading] = useState(false);
 
-
-  const tryLoadAsync = async (filter: WoodyPlantFilterModel, sort: WoodyPlantSortModel) => {
+  const tryLoadAsync = async (
+    filter: WoodyPlantFilterModel,
+    sort: WoodyPlantSortModel
+  ) => {
     setLoading(true);
     try {
       await loadAsync(filter, sort);
@@ -32,7 +33,7 @@ const ListPage: React.FC = () => {
     } catch (error) {
       setLoading(false);
     }
-  }
+  };
 
   const onTableChangeAsync = async (
     pagination: PaginationConfig,
@@ -50,13 +51,13 @@ const ListPage: React.FC = () => {
       ...oldFilter
     };
 
-    const sort = {
+    const sort: WoodyPlantSortModel = {
       ascending: sorter.order === 'ascend',
-      sortBy: sorter.columnKey as SortBy
+      sortBy: sorter.order && (sorter.columnKey as SortBy)
     };
 
     setPage(pagination.current);
-    setFilter(filter);
+    setFilter(newFilter);
     setSort(sort);
 
     await tryLoadAsync(newFilter, sort);
@@ -65,7 +66,14 @@ const ListPage: React.FC = () => {
   const onTextSearchChangeAsync = async (search: string) => {
     const { text, ...oldFilter } = filter;
     const newFilter = { text: search, ...oldFilter };
+
+    const sort: WoodyPlantSortModel = {
+      ascending: true
+    };
+
+    setSort(sort);
     setFilter(newFilter);
+
     await tryLoadAsync(newFilter, sort);
   };
 
@@ -76,6 +84,44 @@ const ListPage: React.FC = () => {
     position: 'bottom'
   } as PaginationConfig;
 
+  const getSortOrder = (key: string) => {
+    return sort.sortBy === key
+      ? sort.ascending
+        ? 'ascend'
+        : 'descend'
+      : undefined;
+  };
+
+  const nameColumn = (
+    <Column
+      sorter
+      sortOrder={getSortOrder('LocalizedNames')}
+      title='Jméno'
+      dataIndex='localizedNames.czech'
+      key='LocalizedNames'
+    />
+  );
+
+  const speciesColumn = (
+    <Column
+      sorter
+      sortOrder={getSortOrder('LocalizedSpecies')}
+      title='Druh'
+      dataIndex='localizedSpecies.czech'
+      key='LocalizedSpecies'
+    />
+  );
+
+  const noteColumn = (
+    <Column
+      sorter
+      sortOrder={getSortOrder('LocalizedNotes')}
+      title='Poznámka'
+      dataIndex='localizedNotes.czech'
+      key='LocalizedNotes'
+    />
+  );
+
   return (
     <Page title='Seznam dřevin'>
       <ResponsiveSearch
@@ -83,33 +129,21 @@ const ListPage: React.FC = () => {
         onSearch={onTextSearchChangeAsync}
         className='textSearch'
         enterButton
-        disabled={loading}
+        loading={loading}
       />
       <Table
         pagination={pagination}
         dataSource={list?.woodyPlants}
         onChange={onTableChangeAsync}
-        style={{ margin: '0.3em' }}
+        style={{ margin: '0.5em' }}
+        rowKey='id'
         bordered
+        loading={loading}
+        expandedRowRender={(x: any) => <div />}
       >
-        <Column
-          sorter
-          title='Jméno'
-          dataIndex='localizedNames.czech'
-          key='LocalizedNames'
-        />
-        <Column
-          sorter
-          title='Druh'
-          dataIndex='localizedSpecies.czech'
-          key='LocalizedSpecies'
-        />
-        <Column
-          sorter
-          title='Poznámka'
-          dataIndex='localizedNotes.czech'
-          key='LocalizedNotes'
-        />
+        {nameColumn}
+        {speciesColumn}
+        {noteColumn}
       </Table>
     </Page>
   );

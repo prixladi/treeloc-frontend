@@ -3,6 +3,7 @@ import { Menu, Icon } from "antd";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { ClickParam } from "antd/lib/menu";
 import { _Map, _List } from "../Routes";
+import {_Green} from '../Common/Colors';
 
 type Props = RouteComponentProps<any>;
 
@@ -14,8 +15,9 @@ const NavBar = ({ history, location }: Props) => (
     }}
     selectedKeys={[location.pathname]}
     mode="horizontal"
-    theme="dark"
+    theme='dark'
     style={{
+      backgroundColor: _Green,
       fontSize: 20
     }}
   >
