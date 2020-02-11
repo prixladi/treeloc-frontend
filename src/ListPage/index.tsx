@@ -3,51 +3,94 @@ import { Page } from '../Common';
 import { useWoodyPlantsLoader } from '../Hooks';
 import { Table } from 'antd';
 import { PaginationConfig, SorterResult } from 'antd/lib/table';
-import { WoodyPlantPreviewModel, SortBy } from '../Services/Models';
+import {
+  WoodyPlantPreviewModel,
+  SortBy,
+  WoodyPlantFilterModel,
+  WoodyPlantSortModel
+} from '../Services/Models';
 import Column from 'antd/lib/table/Column';
+import './index.css';
+import { ResponsiveSearch } from './styled';
 
-const initialFilter = { skip: 0, take: 10 };
-const initialSort = { ascending: true };
+const initialFilter: WoodyPlantFilterModel = { skip: 0, take: 15 };
+const initialSort: WoodyPlantSortModel = { ascending: true };
 
 const ListPage: React.FC = () => {
   const [page, setPage] = useState(1);
-  const [list, loadByFilter] = useWoodyPlantsLoader(initialFilter, initialSort);
+  const [list, loadAsync] = useWoodyPlantsLoader(initialFilter, initialSort);
+  const [filter, setFilter] = useState(initialFilter);
+  const [sort, setSort] = useState(initialSort);
+  const [loading, setLoading] = useState(false);
 
-  if (!list) return <div />;
 
-  const onChangeAsync = async (
+  const tryLoadAsync = async (filter: WoodyPlantFilterModel, sort: WoodyPlantSortModel) => {
+    setLoading(true);
+    try {
+      await loadAsync(filter, sort);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  }
+
+  const onTableChangeAsync = async (
     pagination: PaginationConfig,
-    filter: Partial<Record<keyof WoodyPlantPreviewModel, string[]>>,
+    _: Partial<Record<keyof WoodyPlantPreviewModel, string[]>>,
     sorter: SorterResult<WoodyPlantPreviewModel>
   ) => {
     if (!pagination.current || !pagination.pageSize) return;
 
-    const skip = (pagination.current - 1) * pagination.pageSize;
+    const newSkip = (pagination.current - 1) * pagination.pageSize;
+
+    const { skip, take, ...oldFilter } = filter;
+    const newFilter = {
+      skip: newSkip,
+      take: pagination.pageSize,
+      ...oldFilter
+    };
+
+    const sort = {
+      ascending: sorter.order === 'ascend',
+      sortBy: sorter.columnKey as SortBy
+    };
 
     setPage(pagination.current);
+    setFilter(filter);
+    setSort(sort);
 
-    await loadByFilter(
-      { skip: skip, take: pagination.pageSize },
-      {
-        ascending: sorter.order === 'ascend',
-        sortBy: sorter.columnKey as SortBy
-      }
-    );
+    await tryLoadAsync(newFilter, sort);
+  };
+
+  const onTextSearchChangeAsync = async (search: string) => {
+    const { text, ...oldFilter } = filter;
+    const newFilter = { text: search, ...oldFilter };
+    setFilter(newFilter);
+    await tryLoadAsync(newFilter, sort);
   };
 
   const pagination = {
-    total: list.totalCount,
-    defaultCurrent: 1,
-    pageSize: 10,
-    current: page
+    total: list?.totalCount,
+    pageSize: 14,
+    current: page,
+    position: 'bottom'
   } as PaginationConfig;
 
   return (
     <Page title='Seznam dřevin'>
+      <ResponsiveSearch
+        placeholder='Vyhledávat v textu'
+        onSearch={onTextSearchChangeAsync}
+        className='textSearch'
+        enterButton
+        disabled={loading}
+      />
       <Table
         pagination={pagination}
-        dataSource={list.woodyPlants}
-        onChange={onChangeAsync}
+        dataSource={list?.woodyPlants}
+        onChange={onTableChangeAsync}
+        style={{ margin: '0.3em' }}
+        bordered
       >
         <Column
           sorter
@@ -57,7 +100,6 @@ const ListPage: React.FC = () => {
         />
         <Column
           sorter
-          filterDropdown
           title='Druh'
           dataIndex='localizedSpecies.czech'
           key='LocalizedSpecies'

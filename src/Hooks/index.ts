@@ -15,7 +15,7 @@ export const useWoodyPlantsLoader = (
 ] => {
   var [list, setList] = useState(null as WoodyPlantListModel | null);
 
-  const fetchPlantsAsync = async (
+  const loadAsync = async (
     filter: WoodyPlantFilterModel,
     sort: WoodyPlantSortModel
   ): Promise<void> => {
@@ -23,8 +23,8 @@ export const useWoodyPlantsLoader = (
   };
 
   useEffect(() => {
-    fetchPlantsAsync(initialFilter, initialSort);
+    loadAsync(initialFilter, initialSort);
   }, [initialFilter, initialSort]);
 
-  return [list, fetchPlantsAsync];
+  return [list, loadAsync];
 };
