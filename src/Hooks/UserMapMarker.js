@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-const useUserMapMaker = (map, initialCoords) => {
-  const [data, setData] = useState({ marker: null, coord: initialCoords });
+const useUserMapMarker = (map, initialCoords) => {
+  const [data, setData] = useState({ marker: null, coords: initialCoords });
 
   useEffect(() => {
     const lastMarker = data.marker;
     if (!lastMarker)
       setData({
         marker: new mapboxgl.Marker().setLngLat(initialCoords).addTo(map),
-        coord: initialCoords
+        coords: initialCoords
       });
 
     const handleOnClick = e => {
@@ -22,14 +22,23 @@ const useUserMapMaker = (map, initialCoords) => {
           .addTo(map)
       });
 
-      map.flyTo({ center: [e.lngLat.lng, e.lngLat.lat] });
+      map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat] });
     };
 
     map.on('click', handleOnClick);
     return () => map.off('click', handleOnClick);
   }, [map, data, initialCoords]);
 
-  return data.coords;
+  const setCoords = newCoords => {
+    if (data.marker) data.marker.remove();
+    map.easeTo({ center: newCoords });
+    setData({
+      marker: new mapboxgl.Marker().setLngLat(newCoords).addTo(map),
+      coords: newCoords
+    });
+  };
+
+  return [data.coords, setCoords];
 };
 
-export { useUserMapMaker };
+export { useUserMapMarker };
