@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Page } from '../Common';
-import { useWoodyPlantsLoader } from '../Hooks';
+import { useWoodyPlantsLoader } from '../Hooks/WoodyPlantsLoader';
 import { Table } from 'antd';
 import { PaginationConfig, SorterResult } from 'antd/lib/table';
 import {
