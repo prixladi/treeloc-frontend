@@ -7,6 +7,15 @@ import { AddLayers, Layers } from './Layers';
 import { getFeaturesFromList } from './utils';
 
 export const MapCenter: [number, number] = [15.4749126, 49.8037633];
+export const InitialCoordinates: Coordinates = {
+  altitude: null,
+  altitudeAccuracy: null,
+  heading: null,
+  speed: null,
+  accuracy: 1,
+  longitude: MapCenter[0],
+  latitude: MapCenter[1]
+};
 
 const initialFilter = { skip: 0, take: 5 };
 
@@ -15,8 +24,10 @@ interface Props extends GeolocatedProps {
 }
 
 const MapLogic = ({ map, coords }: Props) => {
-  const [currentCoords, setMarkerCoords] = useUserMapMarker(map, MapCenter);
-
+  const [currentCoords, setMarkerCoords] = useUserMapMarker(
+    map,
+    coords ?? InitialCoordinates
+  );
   const [list, loadAsync] = useWoodyPlantsLoader(initialFilter);
 
   useEffect(() => {

@@ -102,7 +102,6 @@ const ListPage: React.FC = () => {
         rowKey='id'
         bordered
         loading={loading}
-        expandedRowRender={(x: any) => <div />}
       >
         {GetNameColumn({ sort })}
         {GetSpeciesColumn({ sort })}

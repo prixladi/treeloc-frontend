@@ -1,32 +1,50 @@
 import { useState, useEffect } from 'react';
 import { Map, Marker, MapLayerEventType, EventData } from 'mapbox-gl';
+import { SetPositionControl } from '../MapControls/SetPositionControl';
+
+const control = new SetPositionControl();
 
 const useUserMapMarker = (
   map: Map,
-  initialCoords: [number, number]
+  initialCoords: Coordinates
 ): [[number, number], (newCoords: [number, number]) => void] => {
   const [data, setData] = useState({
     marker: null as Marker | null,
-    coords: initialCoords
+    coords: [initialCoords.longitude, initialCoords.latitude] as [
+      number,
+      number
+    ]
   });
+  const [posititonMode, setPositionMode] = useState(false);
 
   useEffect(() => {
+    map.addControl(control);
+  }, [map]);
+
+  useEffect(() => {
+    control.onClickCallback = setPositionMode;
+  }, [posititonMode, setPositionMode]);
+
+  useEffect(() => {
+    if (!posititonMode && data.marker) return;
+
     const lastMarker = data.marker;
     if (!lastMarker)
       setData({
-        marker: new Marker().setLngLat(initialCoords).addTo(map),
-        coords: initialCoords
+        marker: new Marker()
+          .setLngLat([initialCoords.longitude, initialCoords.latitude])
+          .addTo(map),
+        coords: [initialCoords.longitude, initialCoords.latitude]
       });
 
     const handleOnClick = (e: MapLayerEventType & EventData) => {
       if (lastMarker) lastMarker.remove();
-      console.log(e);
+
       setData({
         coords: [e.lngLat.lng, e.lngLat.lat],
-        marker: new Marker()
-          .setLngLat([e.lngLat.lng, e.lngLat.lat])
-          .addTo(map)
+        marker: new Marker().setLngLat([e.lngLat.lng, e.lngLat.lat]).addTo(map)
       });
+      setPositionMode(false);
 
       map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat] });
     };
@@ -35,7 +53,7 @@ const useUserMapMarker = (
     return () => {
       map.off('click', handleOnClick);
     };
-  }, [map, data, initialCoords]);
+  }, [map, data, initialCoords, posititonMode]);
 
   const setCoords = (newCoords: [number, number]) => {
     if (data.marker) data.marker.remove();
