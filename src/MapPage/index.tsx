@@ -1,26 +1,39 @@
-import React, { useEffect, useState, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  Dispatch,
+  SetStateAction
+} from 'react';
+import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import MapLogic from './MapLogic';
+import MapLogic, { MapCenter } from './MapLogic';
 
-const styles = {
+const styles: { width: string; height: string; position: 'absolute' } = {
   width: '100%',
   height: '100%',
   position: 'absolute'
 };
 
 const MapPage = () => {
-  const [map, setMap] = useState(null);
-  const mapContainer = useRef(null);
+  const [map, setMap] = useState(null as Map | null);
+  const mapContainer = useRef(null as HTMLDivElement | null);
 
   useEffect(() => {
     mapboxgl.accessToken =
       'pk.eyJ1Ijoic2hhbXlyIiwiYSI6ImNrMXpiaGFrYzB0c3UzaHFndmFydGplaGsifQ.996oH0ZsDkH6xe7iXaDfGg';
-    const initializeMap = ({ setMap, mapContainer }) => {
+
+    const initializeMap = ({
+      setMap,
+      mapContainer
+    }: {
+      setMap: Dispatch<SetStateAction<Map | null>>;
+      mapContainer: any;
+    }) => {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/shamyr/ck6ifw0i104yf1imxxvdk5ntb', // stylesheet location
-        center: [15.4749126, 49.8037633],
+        style: 'mapbox://styles/shamyr/ck6ifw0i104yf1imxxvdk5ntb', 
+        center: MapCenter,
         zoom: 7.5
       });
 

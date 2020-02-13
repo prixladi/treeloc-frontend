@@ -8,16 +8,16 @@ import { getWoodyPlantsByFilterAsync } from '../Services/WoodyPlantsService';
 
 export const useWoodyPlantsLoader = (
   initialFilter: WoodyPlantFilterModel,
-  initialSort: WoodyPlantSortModel
+  initialSort?: WoodyPlantSortModel
 ): [
   WoodyPlantListModel | null,
-  (flter: WoodyPlantFilterModel, sort: WoodyPlantSortModel) => Promise<void>
+  (flter: WoodyPlantFilterModel, sort?: WoodyPlantSortModel) => Promise<void>
 ] => {
   var [list, setList] = useState(null as WoodyPlantListModel | null);
 
   const loadAsync = async (
     filter: WoodyPlantFilterModel,
-    sort: WoodyPlantSortModel
+    sort?: WoodyPlantSortModel
   ): Promise<void> => {
     setList(await getWoodyPlantsByFilterAsync(filter, sort));
   };

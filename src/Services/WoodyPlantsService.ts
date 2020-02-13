@@ -10,7 +10,7 @@ import { notification } from 'antd';
 
 export const getWoodyPlantsByFilterAsync = async (
   filter: WoodyPlantFilterModel,
-  sort: WoodyPlantSortModel
+  sort?: WoodyPlantSortModel
 ): Promise<WoodyPlantListModel | null> => {
   try {
     var response = await getAsync({

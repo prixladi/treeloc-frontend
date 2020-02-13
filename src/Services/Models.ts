@@ -22,11 +22,17 @@ export type LocalizedStringModel = {
   czech?: string;
 };
 
+export type Location = {
+  name?: string
+  geometry?: Omit<GeoJSON.Geometry, 'GeometryCollection' > 
+}
+
 export type WoodyPlantPreviewModel = {
     id: string
     localizedNames: LocalizedStringModel
     localizedNotes: LocalizedStringModel
     localizedSpecies: LocalizedStringModel
+    location?: Location
 };
 
 export interface WoodyPlantDetailModel extends WoodyPlantPreviewModel {

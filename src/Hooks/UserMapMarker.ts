@@ -1,23 +1,29 @@
 import { useState, useEffect } from 'react';
-import mapboxgl from 'mapbox-gl';
+import { Map, Marker, MapLayerEventType, EventData } from 'mapbox-gl';
 
-const useUserMapMarker = (map, initialCoords) => {
-  const [data, setData] = useState({ marker: null, coords: initialCoords });
+const useUserMapMarker = (
+  map: Map,
+  initialCoords: [number, number]
+): [[number, number], (newCoords: [number, number]) => void] => {
+  const [data, setData] = useState({
+    marker: null as Marker | null,
+    coords: initialCoords
+  });
 
   useEffect(() => {
     const lastMarker = data.marker;
     if (!lastMarker)
       setData({
-        marker: new mapboxgl.Marker().setLngLat(initialCoords).addTo(map),
+        marker: new Marker().setLngLat(initialCoords).addTo(map),
         coords: initialCoords
       });
 
-    const handleOnClick = e => {
+    const handleOnClick = (e: MapLayerEventType & EventData) => {
       if (lastMarker) lastMarker.remove();
-
+      console.log(e);
       setData({
         coords: [e.lngLat.lng, e.lngLat.lat],
-        marker: new mapboxgl.Marker()
+        marker: new Marker()
           .setLngLat([e.lngLat.lng, e.lngLat.lat])
           .addTo(map)
       });
@@ -26,14 +32,16 @@ const useUserMapMarker = (map, initialCoords) => {
     };
 
     map.on('click', handleOnClick);
-    return () => map.off('click', handleOnClick);
+    return () => {
+      map.off('click', handleOnClick);
+    };
   }, [map, data, initialCoords]);
 
-  const setCoords = newCoords => {
+  const setCoords = (newCoords: [number, number]) => {
     if (data.marker) data.marker.remove();
     map.easeTo({ center: newCoords });
     setData({
-      marker: new mapboxgl.Marker().setLngLat(newCoords).addTo(map),
+      marker: new Marker().setLngLat(newCoords).addTo(map),
       coords: newCoords
     });
   };

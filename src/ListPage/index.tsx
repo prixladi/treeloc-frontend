@@ -4,15 +4,16 @@ import { useWoodyPlantsLoader } from '../Hooks/WoodyPlantsLoader';
 import { Table } from 'antd';
 import { PaginationConfig, SorterResult } from 'antd/lib/table';
 import {
-  WoodyPlantPreviewModel,
   SortBy,
   WoodyPlantFilterModel,
   WoodyPlantSortModel
 } from '../Services/Models';
-import Column from 'antd/lib/table/Column';
 import { ResponsiveSearch } from './styled';
+import { TransformTableData, TableData } from './utils';
+import { GetNameColumn, GetSpeciesColumn, GetNoteColumn } from './Columns';
 
-const initialFilter: WoodyPlantFilterModel = { skip: 0, take: 14 };
+const pageSize: number = 14;
+const initialFilter: WoodyPlantFilterModel = { skip: 0, take: pageSize };
 const initialSort: WoodyPlantSortModel = { ascending: true };
 
 const ListPage: React.FC = () => {
@@ -37,8 +38,8 @@ const ListPage: React.FC = () => {
 
   const onTableChangeAsync = async (
     pagination: PaginationConfig,
-    _: Partial<Record<keyof WoodyPlantPreviewModel, string[]>>,
-    sorter: SorterResult<WoodyPlantPreviewModel>
+    _: Partial<Record<keyof TableData, string[]>>,
+    sorter: SorterResult<TableData>
   ) => {
     if (!pagination.current || !pagination.pageSize) return;
 
@@ -79,48 +80,10 @@ const ListPage: React.FC = () => {
 
   const pagination = {
     total: list?.totalCount,
-    pageSize: 14,
+    pageSize: pageSize,
     current: page,
     position: 'bottom'
   } as PaginationConfig;
-
-  const getSortOrder = (key: string) => {
-    return sort.sortBy === key
-      ? sort.ascending
-        ? 'ascend'
-        : 'descend'
-      : undefined;
-  };
-
-  const nameColumn = (
-    <Column
-      sorter
-      sortOrder={getSortOrder('LocalizedNames')}
-      title='Jméno'
-      dataIndex='localizedNames.czech'
-      key='LocalizedNames'
-    />
-  );
-
-  const speciesColumn = (
-    <Column
-      sorter
-      sortOrder={getSortOrder('LocalizedSpecies')}
-      title='Druh'
-      dataIndex='localizedSpecies.czech'
-      key='LocalizedSpecies'
-    />
-  );
-
-  const noteColumn = (
-    <Column
-      sorter
-      sortOrder={getSortOrder('LocalizedNotes')}
-      title='Poznámka'
-      dataIndex='localizedNotes.czech'
-      key='LocalizedNotes'
-    />
-  );
 
   return (
     <Page title='Seznam dřevin'>
@@ -133,7 +96,7 @@ const ListPage: React.FC = () => {
       />
       <Table
         pagination={pagination}
-        dataSource={list?.woodyPlants}
+        dataSource={TransformTableData(list?.woodyPlants)}
         onChange={onTableChangeAsync}
         style={{ margin: '0.5em' }}
         rowKey='id'
@@ -141,9 +104,9 @@ const ListPage: React.FC = () => {
         loading={loading}
         expandedRowRender={(x: any) => <div />}
       >
-        {nameColumn}
-        {speciesColumn}
-        {noteColumn}
+        {GetNameColumn({ sort })}
+        {GetSpeciesColumn({ sort })}
+        {GetNoteColumn({ sort })}
       </Table>
     </Page>
   );

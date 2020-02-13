@@ -2,7 +2,7 @@ import { WoodyPlantFilterModel, WoodyPlantSortModel } from './Models';
 
 export const buildQuery = (
   filter: WoodyPlantFilterModel,
-  sort: WoodyPlantSortModel
+  sort?: WoodyPlantSortModel
 ): string => {
   let query = `Skip=${filter.skip}&Take=${filter.take}`;
 
@@ -13,7 +13,7 @@ export const buildQuery = (
   if (filter.point)
     query += `&Point.Latitude=${filter.point.latitude}&Point.Longitude=${filter.point.longitude}`;
 
-  if(sort.sortBy)
+  if(sort && sort.sortBy)
     query += `&SortBy=${sort.sortBy}&Ascending=${sort.ascending}`
 
   return query;
