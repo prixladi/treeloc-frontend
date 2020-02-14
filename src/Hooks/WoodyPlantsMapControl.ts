@@ -32,7 +32,7 @@ export const useWoodyPlantsMapControl = (map: Map, coords: [number, number]) => 
 
   useEffect(() => {
     control.onClickCallback = () => {
-      loadAsync(0, 5, coords);
+      loadAsync(0, 100, coords);
     };
     // eslint-disable-next-line
   }, [coords]);
