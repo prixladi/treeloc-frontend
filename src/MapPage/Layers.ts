@@ -1,4 +1,5 @@
-import { Map } from 'mapbox-gl';
+import { Map, MapLayerEventType, EventData } from 'mapbox-gl';
+import { createPopup } from '../Popups/MapFeaturePupup';
 
 export const Layers = {
   _Points: 'Points',
@@ -18,6 +19,22 @@ export const AddLayers = (map: Map): void => {
     filter: ['==', '$type', 'Polygon']
   });
 
+  map.on('mouseenter', Layers._Polygons, function() {
+    const canvas = map.getCanvas();
+    if (canvas.style.cursor === '') canvas.style.cursor = 'pointer';
+  });
+
+  map.on('mouseleave', Layers._Polygons, function() {
+    const canvas = map.getCanvas();
+    if (canvas.style.cursor === 'pointer') map.getCanvas().style.cursor = '';
+  });
+
+  map.on(
+    'click',
+    Layers._Polygons,
+    (ev: MapLayerEventType['click'] & EventData) => createPopup(ev, map)
+  );
+
   map.addLayer({
     id: Layers._Points,
     type: 'circle',
@@ -29,6 +46,22 @@ export const AddLayers = (map: Map): void => {
     filter: ['==', '$type', 'Point']
   });
 
+  map.on('mouseenter', Layers._Points, function() {
+    const canvas = map.getCanvas();
+    if (canvas.style.cursor === '') canvas.style.cursor = 'pointer';
+  });
+
+  map.on('mouseleave', Layers._Points, function() {
+    const canvas = map.getCanvas();
+    if (canvas.style.cursor === 'pointer') map.getCanvas().style.cursor = '';
+  });
+
+  map.on(
+    'click',
+    Layers._Points,
+    (ev: MapLayerEventType['click'] & EventData) => createPopup(ev, map)
+  );
+
   map.addLayer({
     id: Layers._Lines,
     type: 'line',
@@ -38,4 +71,18 @@ export const AddLayers = (map: Map): void => {
     },
     filter: ['==', '$type', 'LineString']
   });
+
+  map.on('mouseenter', Layers._Lines, function() {
+    const canvas = map.getCanvas();
+    if (canvas.style.cursor === '') canvas.style.cursor = 'pointer';
+  });
+
+  map.on('mouseleave', Layers._Lines, function() {
+    const canvas = map.getCanvas();
+    if (canvas.style.cursor === 'pointer') map.getCanvas().style.cursor = '';
+  });
+
+  map.on('click', Layers._Lines, (ev: MapLayerEventType['click'] & EventData) =>
+    createPopup(ev, map)
+  );
 };

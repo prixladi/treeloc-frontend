@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { useUserMapMarker } from '../Hooks/UserMapMarker';
 import { geolocated, GeolocatedProps } from 'react-geolocated';
 import { Map } from 'mapbox-gl';
-import { useGeoWoodyPlantsLoader } from '../Hooks/GeoWoodyPlantsLoader';
+import { useWoodyPlantsMapControl } from '../Hooks/WoodyPlantsMapControl';
 import { AddLayers } from './Layers';
 import { setData } from './utils';
-import { FindWoodyPlantsControl } from '../MapControls/FindWoodyPlantsControl';
 
 interface Props extends GeolocatedProps {
   map: Map;
@@ -13,19 +12,13 @@ interface Props extends GeolocatedProps {
 
 const MapLogic = ({ map, coords }: Props) => {
   const [currentCoords, setMarkerCoords] = useUserMapMarker(map);
-  const [list, loadAsync] = useGeoWoodyPlantsLoader();
+  const list = useWoodyPlantsMapControl(map, currentCoords);
 
   useEffect(() => {
     setData(map, list);
   }, [map, list]);
 
   useEffect(() => {
-    loadAsync(0, 5, currentCoords);
-    // eslint-disable-next-line
-  }, [currentCoords]);
-
-  useEffect(() => {
-    map.addControl(new FindWoodyPlantsControl());
     AddLayers(map);
   }, [map]);
 

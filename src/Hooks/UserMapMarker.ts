@@ -44,8 +44,12 @@ const useUserMapMarker = (
   }, [map]);
 
   useEffect(() => {
-    control.onClickCallback = setPositionMode;
-  }, [posititonMode, setPositionMode]);
+    control.onClickCallback = () => {
+      setPositionMode(!posititonMode);
+      if (!posititonMode) map.getCanvas().style.cursor = 'crosshair';
+      else map.getCanvas().style.cursor = '';
+    };
+  }, [posititonMode, setPositionMode, map]);
 
   useEffect(() => {
     if (!marker) setMarker(createMarker(map, coords));
@@ -58,6 +62,7 @@ const useUserMapMarker = (
       setCoords([e.lngLat.lng, e.lngLat.lat]);
       setMarker(createMarker(map, [e.lngLat.lng, e.lngLat.lat]).addTo(map));
       setPositionMode(false);
+      map.getCanvas().style.cursor = '';
 
       map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat] });
     };

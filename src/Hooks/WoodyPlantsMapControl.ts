@@ -1,11 +1,12 @@
 import { WoodyPlantListModel } from '../Services/Models';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getWoodyPlantsByFilterAsync } from '../Services/WoodyPlantsService';
+import { FindWoodyPlantsControl } from '../MapControls/FindWoodyPlantsControl';
+import { Map } from 'mapbox-gl';
 
-export const useGeoWoodyPlantsLoader = (): [
-  WoodyPlantListModel | null,
-  (skip: number, take: number, coords: [number, number]) => Promise<void>
-] => {
+const control = new FindWoodyPlantsControl();
+
+export const useWoodyPlantsMapControl = (map: Map, coords: [number, number]) => {
   var [list, setList] = useState(null as WoodyPlantListModel | null);
 
   const loadAsync = async (
@@ -25,5 +26,16 @@ export const useGeoWoodyPlantsLoader = (): [
     );
   };
 
-  return [list, loadAsync];
+  useEffect(() => {
+    map.addControl(control);
+  }, [map])
+
+  useEffect(() => {
+    control.onClickCallback = () => {
+      loadAsync(0, 5, coords);
+    };
+    // eslint-disable-next-line
+  }, [coords]);
+
+  return list;
 };

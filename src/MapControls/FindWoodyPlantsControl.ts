@@ -7,8 +7,7 @@ export class FindWoodyPlantsControl implements IControl {
   onClickCallback?: () => void;
 
   onclick() {
-    if(this.onClickCallback)
-      this.onClickCallback();
+    if (this.onClickCallback) this.onClickCallback();
   }
 
   constructor() {
@@ -16,6 +15,7 @@ export class FindWoodyPlantsControl implements IControl {
     this.button.className = 'mapboxgl-ctrl-icon maki-circle';
     this.button.type = 'button';
     this.button.onclick = _ => this.onclick();
+    this.button.title = 'Najít dřeviny';
   }
 
   onAdd(map: Map) {

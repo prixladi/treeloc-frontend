@@ -1,0 +1,6 @@
+.mapboxgl-popup-content {
+  background-color: rgba(82, 196, 26, 0.90);
+}
+.mapboxgl-popup-tip {
+  border-top-color: rgba(82, 196, 26, 0.90);
+}

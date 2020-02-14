@@ -35,6 +35,11 @@ export const getFeaturesFromList = (
   return filtered.map(plant => ({
     type: 'Feature',
     geometry: plant.location?.geometry as GeoJSON.Geometry,
-    properties: {}
+    properties: {
+      name: plant.localizedNames.czech,
+      species: plant.localizedSpecies.czech,
+      note: plant.localizedNotes.czech,
+      imgUrl: plant.imageUrl
+    }
   }));
 };
