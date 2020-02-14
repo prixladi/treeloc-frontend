@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
 
+
 type PageProps = {
   title: string;
   children: ReactNode[] | ReactNode;

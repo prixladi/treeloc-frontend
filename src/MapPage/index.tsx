@@ -7,7 +7,8 @@ import React, {
 } from 'react';
 import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import MapLogic, { MapCenter } from './MapLogic';
+import { MapCenter } from '../Common/MapConstants';
+import MapLogic from './MapLogic';
 
 const styles: { width: string; height: string; position: 'absolute' } = {
   width: '100%',

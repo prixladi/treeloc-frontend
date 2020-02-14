@@ -1,20 +1,19 @@
 import { IControl, Map } from 'mapbox-gl';
-import { Dispatch, SetStateAction } from 'react';
 
-export class SetPositionControl implements IControl {
+export class FindWoodyPlantsControl implements IControl {
   map?: Map;
   container?: HTMLDivElement;
   button: HTMLButtonElement;
-  onClickCallback?: Dispatch<SetStateAction<boolean>>;
+  onClickCallback?: () => void;
 
   onclick() {
     if(this.onClickCallback)
-      this.onClickCallback(true);
+      this.onClickCallback();
   }
 
   constructor() {
     this.button = document.createElement('button');
-    this.button.className = 'mapboxgl-ctrl-icon mapbox-gl-draw_point';
+    this.button.className = 'mapboxgl-ctrl-icon maki-circle';
     this.button.type = 'button';
     this.button.onclick = _ => this.onclick();
   }
