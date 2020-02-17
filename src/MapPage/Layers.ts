@@ -37,7 +37,7 @@ export const AddLayers = (map: Map): void => {
         250,
         '#52c41a'
       ],
-      'circle-radius': ['step', ['get', 'point_count'], 10, 50, 20, 250, 30]
+      'circle-radius': ['step', ['get', 'point_count'], 20, 50, 30, 250, 40]
     }
   });
 

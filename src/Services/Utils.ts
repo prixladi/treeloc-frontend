@@ -8,7 +8,7 @@ export const buildQuery = (
 
   if (filter.text) query += `&Text=${filter.text}`;
 
-  if (filter.distance) query += `&Text=${filter.distance}`;
+  if (filter.distance) query += `&Distance=${filter.distance}`;
 
   if (filter.point)
     query += `&Point.Latitude=${filter.point.latitude}&Point.Longitude=${filter.point.longitude}`;
