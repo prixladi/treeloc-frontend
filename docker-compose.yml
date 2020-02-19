@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+
+  frontend:
+    image: treeloc/frontend
+    ports:
+      - "80:80"
+    build:
+      context: .
