@@ -60,7 +60,7 @@ const useUserMapMarker = (
     const handleOnClick = (e: L.LeafletMouseEvent) => {
       if (marker) marker.remove();
 
-      setCoords([e.latlng.lng, e.latlng.lat]);
+      setCoords([e.latlng.lat, e.latlng.lng]);
       setMarker(createMarker(map, [e.latlng.lat, e.latlng.lng]).addTo(map));
       setPositionMode(false);
       L.DomUtil.removeClass(map.getContainer(),'crosshair-cursor-enabled');

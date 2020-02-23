@@ -35,6 +35,7 @@ export class SetPositionControl extends L.Control {
 
     return this.container;
   }
+  
   onRemove() {
     this.container?.parentNode?.removeChild(this.container);
     this.map = undefined;
