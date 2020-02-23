@@ -8,7 +8,6 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
     "@types/leaflet": "^1.5.8",
-    "@types/leaflet.awesome-markers": "^2.0.24",
     "@types/leaflet.markercluster": "^1.4.2",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.19",
@@ -18,14 +17,12 @@
     "Leaflet.Deflate": "^1.2.0",
     "antd": "^3.26.9",
     "leaflet": "^1.6.0",
-    "leaflet.awesome-markers": "^2.0.5",
     "leaflet.markercluster": "^1.4.1",
-    "mapbox-gl": "^1.7.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-geolocated": "^3.0.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "^3.4.0",
     "styled-components": "^5.0.1",
     "typescript": "~3.7.2"
   },
@@ -49,8 +46,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/mapbox-gl": "^1.7.0"
   }
 }
