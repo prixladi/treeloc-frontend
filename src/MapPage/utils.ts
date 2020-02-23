@@ -3,7 +3,11 @@ import {
   WoodyPlantPreviewModel
 } from '../Services/Models';
 
-import { Map, GeoJSONSource } from 'mapbox-gl';
+import L from 'leaflet';
+import 'leaflet.markercluster';
+import 'Leaflet.Deflate';
+import { deflate } from './deflateUtils';
+import { treeIcon } from '../Common/MapConstants';
 
 export const Sources = {
   _Points: 'points',
@@ -86,7 +90,14 @@ const getPolygonFeaturesFromList = (
   }));
 };
 
-export const setData = (map: Map, list: WoodyPlantListModel | null) => {
+let pointLayer: L.Layer | null = null;
+let lineLayer: L.Layer | null = null;
+let polygonLayer: L.Layer | null = null;
+let deflated: any | null = null;
+
+export const setData = (map: L.Map, list: WoodyPlantListModel | null) => {
+  if (!list) return;
+
   const pointData = {
     type: 'FeatureCollection',
     features: getPointFeaturesFromList(list)
@@ -102,34 +113,28 @@ export const setData = (map: Map, list: WoodyPlantListModel | null) => {
     features: getPolygonFeaturesFromList(list)
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
-  const pointSource = map.getSource(Sources._Points) as GeoJSONSource;
-  const lineSource = map.getSource(Sources._Lines) as GeoJSONSource;
-  const polygonSource = map.getSource(Sources._Polygons) as GeoJSONSource;
+  if (pointLayer) pointLayer.remove();
+  if (lineLayer) lineLayer.remove();
+  if (polygonLayer) polygonLayer.remove();
+  if (deflated) deflated.remove();
 
-  if (pointSource) pointSource.setData(pointData);
-  else {
-    map.addSource(Sources._Points, ({
-      type: 'geojson',
-      data: pointData,
-      cluster: true,
-      clusterMaxZoom: 14, // Max zoom to cluster points on
-      clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
-    } as unknown) as GeoJSONSource);
-  }
+  pointLayer = L.geoJSON(pointData,{
+    pointToLayer: (_, yx) => {
+      const marker = new L.Marker(yx, {
+        icon: treeIcon,
+      });
+      return marker;
+    }
+  });
 
-  if (lineSource) lineSource.setData(lineData);
-  else {
-    map.addSource(Sources._Lines, ({
-      type: 'geojson',
-      data: lineData
-    } as unknown) as GeoJSONSource);
-  }
+  lineLayer = L.geoJSON(lineData);
+  polygonLayer = L.geoJSON(polygonData);
 
-  if (polygonSource) polygonSource.setData(polygonData);
-  else {
-    map.addSource(Sources._Polygons, ({
-      type: 'geojson',
-      data: polygonData
-    } as unknown) as GeoJSONSource);
-  }
+  deflated = deflate();
+
+  if (pointData.features.length > 0) pointLayer.addTo(deflated);
+  if (lineData.features.length > 0) lineLayer.addTo(deflated);
+  if (polygonData.features.length > 0) polygonLayer.addTo(deflated);
+
+  deflated.addTo(map);
 };

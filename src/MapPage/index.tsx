@@ -5,7 +5,11 @@ import React, {
   Dispatch,
   SetStateAction
 } from 'react';
+
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+
 import { MapCenter } from '../Common/MapConstants';
 import L from 'leaflet';
 
@@ -14,8 +18,9 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import MapLogic from './MapLogic';
 
 let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconAnchor: [15, 47]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -43,11 +48,11 @@ const MapPage = () => {
       map.setView(MapCenter, 9);
 
       // 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
-      L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' , {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution:
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
-map.on('click', e => console.log(e));
+      
       setMap(map);
     };
 

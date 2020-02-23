@@ -22,15 +22,20 @@ export class FindWoodyPlantsControl extends L.Control {
     this.anchor.innerHTML = '<strong>N</strong>';
   }
 
+  getPosition(): L.ControlPosition {
+    return 'topleft';
+  }
+  
   onAdd(map: L.Map) {
     this.map = map;
 
     this.container = document.createElement('div');
-    this.container.className = 'mapboxgl-ctrl-group mapboxgl-ctrl';
+    this.container.className = 'leaflet-bar';
     this.container.appendChild(this.anchor);
 
     return this.container;
   }
+
   onRemove() {
     this.container?.parentNode?.removeChild(this.container);
     this.map = undefined;

@@ -19,8 +19,7 @@ export const useWoodyPlantsMapControl = (map: L.Map, coords: [number, number]) =
         {
           skip: skip,
           take: take,
-          point: { longitude: coords[1], latitude: coords[0] },
-          distance: 100/6378.1
+          point: { longitude: coords[1], latitude: coords[0] }
         },
         { ascending: true }
       )

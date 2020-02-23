@@ -3,6 +3,7 @@ import { useUserMapMarker } from '../Hooks/UserMapMarker';
 import { geolocated, GeolocatedProps } from 'react-geolocated';
 import L from 'leaflet';
 import { useWoodyPlantsMapControl } from '../Hooks/WoodyPlantsMapControl';
+import { setData } from './utils';
 
 interface Props extends GeolocatedProps {
   map: L.Map;
@@ -16,6 +17,10 @@ const MapLogic = ({ map, coords }: Props) => {
     if (coords) setMarkerCoords([coords.latitude, coords.longitude]);
     // eslint-disable-next-line
   }, [coords]);
+
+  useEffect(() => {
+    setData(map, list);
+  }, [map, list]);
 
   return <div />;
 };
