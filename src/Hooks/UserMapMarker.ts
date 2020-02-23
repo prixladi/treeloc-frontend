@@ -1,30 +1,30 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { Map, Marker, MapLayerEventType, EventData } from 'mapbox-gl';
 import { SetPositionControl } from '../MapControls/SetPositionControl';
 import { MapCenter } from '../Common/MapConstants';
+import L from 'leaflet'
 
 const control = new SetPositionControl();
 
 const createSetCoordsCallback = (
-  marker: Marker | null,
-  map: Map,
-  setMarker: Dispatch<SetStateAction<Marker | null>>,
+  marker: L.Marker | null,
+  map: L.Map,
+  setMarker: Dispatch<SetStateAction<L.Marker | null>>,
   setCoords: Dispatch<SetStateAction<[number, number]>>
 ) => {
   return (newCoords: [number, number]) => {
     if (marker) marker.remove();
-    map.easeTo({ center: newCoords });
-    setMarker(new Marker().setLngLat(newCoords).addTo(map));
+    map.flyTo(newCoords);
+    setMarker(new L.Marker(newCoords).addTo(map));
     setCoords(newCoords);
   };
 };
 
-const createMarker = (map: Map, coords: [number, number]) =>
-  new Marker().setLngLat(coords).addTo(map);
+const createMarker = (map: L.Map, coords: [number, number]) =>
+  new L.Marker(coords).addTo(map);
 
 const registerOnClickHandle = (
-  map: Map,
-  handle: (e: MapLayerEventType & EventData) => void
+  map: L.Map,
+  handle: (e: L.LeafletMouseEvent) => void
 ) => {
   map.on('click', handle);
   return () => {
@@ -33,21 +33,22 @@ const registerOnClickHandle = (
 };
 
 const useUserMapMarker = (
-  map: Map
+  map: L.Map
 ): [[number, number], (newCoords: [number, number]) => void] => {
-  const [marker, setMarker] = useState(null as Marker | null);
+  const [marker, setMarker] = useState(null as L.Marker | null);
   const [coords, setCoords] = useState(MapCenter);
   const [posititonMode, setPositionMode] = useState(false);
 
   useEffect(() => {
     map.addControl(control);
+    L.DomUtil.removeClass(map.getContainer(),'crosshair-cursor-enabled');
   }, [map]);
 
   useEffect(() => {
     control.onClickCallback = () => {
       setPositionMode(!posititonMode);
-      if (!posititonMode) map.getCanvas().style.cursor = 'crosshair';
-      else map.getCanvas().style.cursor = '';
+      if (!posititonMode) L.DomUtil.addClass(map.getContainer(),'crosshair-cursor-enabled');
+      else L.DomUtil.removeClass(map.getContainer(),'crosshair-cursor-enabled');
     };
   }, [posititonMode, setPositionMode, map]);
 
@@ -56,15 +57,15 @@ const useUserMapMarker = (
 
     if (!posititonMode) return;
 
-    const handleOnClick = (e: MapLayerEventType & EventData) => {
+    const handleOnClick = (e: L.LeafletMouseEvent) => {
       if (marker) marker.remove();
 
-      setCoords([e.lngLat.lng, e.lngLat.lat]);
-      setMarker(createMarker(map, [e.lngLat.lng, e.lngLat.lat]).addTo(map));
+      setCoords([e.latlng.lng, e.latlng.lat]);
+      setMarker(createMarker(map, [e.latlng.lat, e.latlng.lng]).addTo(map));
       setPositionMode(false);
-      map.getCanvas().style.cursor = '';
+      L.DomUtil.removeClass(map.getContainer(),'crosshair-cursor-enabled');
 
-      map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat] });
+      //map.flyTo([e.latlng.lat, e.latlng.lng]);
     };
 
     return registerOnClickHandle(map, handleOnClick);

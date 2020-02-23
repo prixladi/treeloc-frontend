@@ -2,11 +2,11 @@ import { WoodyPlantListModel } from '../Services/Models';
 import { useState, useEffect } from 'react';
 import { getWoodyPlantsByFilterAsync } from '../Services/WoodyPlantsService';
 import { FindWoodyPlantsControl } from '../MapControls/FindWoodyPlantsControl';
-import { Map } from 'mapbox-gl';
+import L from 'leaflet';
 
 const control = new FindWoodyPlantsControl();
 
-export const useWoodyPlantsMapControl = (map: Map, coords: [number, number]) => {
+export const useWoodyPlantsMapControl = (map: L.Map, coords: [number, number]) => {
   var [list, setList] = useState(null as WoodyPlantListModel | null);
 
   const loadAsync = async (
@@ -19,7 +19,7 @@ export const useWoodyPlantsMapControl = (map: Map, coords: [number, number]) => 
         {
           skip: skip,
           take: take,
-          point: { longitude: coords[0], latitude: coords[1] },
+          point: { longitude: coords[1], latitude: coords[0] },
           distance: 100/6378.1
         },
         { ascending: true }

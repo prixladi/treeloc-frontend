@@ -1,9 +1,9 @@
-import { IControl, Map } from 'mapbox-gl';
+import L from 'leaflet';
 
-export class FindWoodyPlantsControl implements IControl {
-  map?: Map;
+export class FindWoodyPlantsControl extends L.Control {
+  map?: L.Map;
   container?: HTMLDivElement;
-  button: HTMLButtonElement;
+  anchor: HTMLAnchorElement;
   onClickCallback?: () => void;
 
   onclick() {
@@ -11,19 +11,23 @@ export class FindWoodyPlantsControl implements IControl {
   }
 
   constructor() {
-    this.button = document.createElement('button');
-    this.button.className = 'mapboxgl-ctrl-icon maki-circle';
-    this.button.type = 'button';
-    this.button.onclick = _ => this.onclick();
-    this.button.title = 'Najít dřeviny';
+    super();
+    this.anchor = document.createElement('a');
+    this.anchor.className = 'leaflet-bar';
+    this.anchor.onclick = e => {
+      L.DomEvent.stop(e);
+      this.onclick();
+    };
+    this.anchor.title = 'Najít dřeviny';
+    this.anchor.innerHTML = '<strong>N</strong>';
   }
 
-  onAdd(map: Map) {
+  onAdd(map: L.Map) {
     this.map = map;
 
     this.container = document.createElement('div');
     this.container.className = 'mapboxgl-ctrl-group mapboxgl-ctrl';
-    this.container.appendChild(this.button);
+    this.container.appendChild(this.anchor);
 
     return this.container;
   }
