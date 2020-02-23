@@ -8,6 +8,7 @@ import 'leaflet.markercluster';
 import 'Leaflet.Deflate';
 import { deflate } from './deflateUtils';
 import { treeIcon } from '../Common/MapConstants';
+import { buildDescription } from '../Popups/FeatureDescritionBuilder';
 
 export const Sources = {
   _Points: 'points',
@@ -118,17 +119,34 @@ export const setData = (map: L.Map, list: WoodyPlantListModel | null) => {
   if (polygonLayer) polygonLayer.remove();
   if (deflated) deflated.remove();
 
-  pointLayer = L.geoJSON(pointData,{
+  const onEachFeature = (
+    feature: GeoJSON.Feature<GeoJSON.Geometry, any>,
+    layer: L.Layer
+  ) => {
+    if (feature.properties) {
+      layer.bindPopup(
+        buildDescription({
+          name: feature.properties.name,
+          species: feature.properties.species,
+          note: feature.properties.note,
+          imgUrl: feature.properties.imgUrl
+        })
+      );
+    }
+  };
+
+  pointLayer = L.geoJSON(pointData, {
     pointToLayer: (_, yx) => {
       const marker = new L.Marker(yx, {
-        icon: treeIcon,
+        icon: treeIcon
       });
       return marker;
-    }
+    },
+    onEachFeature: onEachFeature
   });
 
-  lineLayer = L.geoJSON(lineData);
-  polygonLayer = L.geoJSON(polygonData);
+  lineLayer = L.geoJSON(lineData, { onEachFeature: onEachFeature });
+  polygonLayer = L.geoJSON(polygonData, { onEachFeature: onEachFeature });
 
   deflated = deflate();
 
