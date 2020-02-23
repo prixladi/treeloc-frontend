@@ -1,9 +1,9 @@
-import { IControl, Map } from 'mapbox-gl';
+import L from 'leaflet';
 
-export class SetPositionControl implements IControl {
-  map?: Map;
+export class SetPositionControl extends L.Control {
+  map?: L.Map;
   container?: HTMLDivElement;
-  button: HTMLButtonElement;
+  anchor: HTMLAnchorElement;
   onClickCallback?: () => void;
 
   onclick() {
@@ -11,19 +11,27 @@ export class SetPositionControl implements IControl {
   }
 
   constructor() {
-    this.button = document.createElement('button');
-    this.button.className = 'mapboxgl-ctrl-icon mapbox-gl-draw_point';
-    this.button.type = 'button';
-    this.button.onclick = _ => this.onclick();
-    this.button.title = 'Nastavit pozici';
+    super();
+    this.anchor = document.createElement('a');
+    this.anchor.className = 'leaflet-bar';
+    this.anchor.onclick = e => {
+      L.DomEvent.stop(e);
+      this.onclick();
+    };
+    this.anchor.title = 'Nastavit pozici';
+    this.anchor.innerHTML = '<strong>P</strong>'
   }
 
-  onAdd(map: Map) {
+  getPosition(): L.ControlPosition {
+    return 'topleft';
+  }
+
+  onAdd(map: L.Map) {
     this.map = map;
 
     this.container = document.createElement('div');
-    this.container.className = 'mapboxgl-ctrl-group mapboxgl-ctrl';
-    this.container.appendChild(this.button);
+    this.container.className = 'leaflet-bar';
+    this.container.appendChild(this.anchor);
 
     return this.container;
   }

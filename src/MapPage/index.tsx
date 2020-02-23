@@ -5,43 +5,50 @@ import React, {
   Dispatch,
   SetStateAction
 } from 'react';
-import mapboxgl, { Map } from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import 'leaflet/dist/leaflet.css';
 import { MapCenter } from '../Common/MapConstants';
+import L from 'leaflet';
+
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import MapLogic from './MapLogic';
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 const styles: { width: string; height: string; position: 'absolute' } = {
   width: '100%',
-  height: '100%',
+  height: '95%',
   position: 'absolute'
 };
 
 const MapPage = () => {
-  const [map, setMap] = useState(null as Map | null);
+  const [map, setMap] = useState(null as L.Map | null);
   const mapContainer = useRef(null as HTMLDivElement | null);
 
   useEffect(() => {
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoic2hhbXlyIiwiYSI6ImNrMXpiaGFrYzB0c3UzaHFndmFydGplaGsifQ.996oH0ZsDkH6xe7iXaDfGg';
-
     const initializeMap = ({
       setMap,
       mapContainer
     }: {
-      setMap: Dispatch<SetStateAction<Map | null>>;
+      setMap: Dispatch<SetStateAction<L.Map | null>>;
       mapContainer: any;
     }) => {
-      const map = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/shamyr/ck6ifw0i104yf1imxxvdk5ntb', 
-        center: MapCenter,
-        zoom: 7.5
-      });
+      const map = new L.Map(mapContainer.current, { tap: false });
 
-      map.on('load', () => {
-        setMap(map);
-        map.resize();
-      });
+      map.setView(MapCenter, 9);
+
+      // 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
+      L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' , {
+        attribution:
+          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+map.on('click', e => console.log(e));
+      setMap(map);
     };
 
     if (!map) initializeMap({ setMap, mapContainer });

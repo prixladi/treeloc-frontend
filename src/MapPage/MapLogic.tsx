@@ -1,29 +1,19 @@
 import React, { useEffect } from 'react';
 import { useUserMapMarker } from '../Hooks/UserMapMarker';
 import { geolocated, GeolocatedProps } from 'react-geolocated';
-import { Map } from 'mapbox-gl';
+import L from 'leaflet';
 import { useWoodyPlantsMapControl } from '../Hooks/WoodyPlantsMapControl';
-import { AddLayers } from './Layers';
-import { setData } from './utils';
 
 interface Props extends GeolocatedProps {
-  map: Map;
+  map: L.Map;
 }
 
 const MapLogic = ({ map, coords }: Props) => {
   const [currentCoords, setMarkerCoords] = useUserMapMarker(map);
   const list = useWoodyPlantsMapControl(map, currentCoords);
-
+  
   useEffect(() => {
-    setData(map, list);
-  }, [map, list]);
-
-  useEffect(() => {
-    AddLayers(map);
-  }, [map]);
-
-  useEffect(() => {
-    if (coords) setMarkerCoords([coords.longitude, coords.latitude]);
+    if (coords) setMarkerCoords([coords.latitude, coords.longitude]);
     // eslint-disable-next-line
   }, [coords]);
 
