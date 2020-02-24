@@ -8,7 +8,7 @@
 
 ### Run with clean build
 
-`docker-compose up --build
+`docker-compose up --build`
 
 ## Yarn
 
