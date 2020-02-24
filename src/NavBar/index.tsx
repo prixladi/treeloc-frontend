@@ -21,14 +21,14 @@ const NavBar = ({ history, location }: Props) => (
       fontSize: 20
     }}
   >
-    <Menu.Item key={_List}>
-      <Icon type="ordered-list" />
-      Seznam dřevin
-    </Menu.Item>
-
     <Menu.Item key={_Map}>
       <Icon type="global" />
       Mapa dřevin
+    </Menu.Item>
+
+    <Menu.Item key={_List}>
+      <Icon type="ordered-list" />
+      Seznam dřevin
     </Menu.Item>
 
     <Menu.Item style={{ float: "right" }}>

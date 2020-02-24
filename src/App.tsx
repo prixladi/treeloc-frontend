@@ -17,7 +17,7 @@ const App: React.FC = () => {
       <NavBar />
       <Switch>
         <Route exact path="/">
-          <Redirect to={_List} />
+          <Redirect to={_Map} />
         </Route>
         <Route exact path={_Map}>
           <MapPage />
