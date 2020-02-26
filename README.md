@@ -1,9 +1,21 @@
 # Treeloc frontend
 
-## Run
+## Docker
 
-docker-compose up 
+### Run
 
-## Run with clean build
+`docker-compose up`
 
-docker-compose up --build
+### Run with clean build
+
+`docker-compose up --build`
+
+## Yarn
+
+### Init
+
+`yarn`
+
+### Run
+
+`yarn start`
