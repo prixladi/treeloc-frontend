@@ -8,3 +8,5 @@ services:
       - "80:80"
     build:
       context: .
+    environment:
+      RELEASE_ENV: "local"

@@ -1,4 +1,6 @@
-export const _BaseApiUrl = "http://localhost:4545/api/v1";
+declare const conf: { apiUrl: string };
+
+export const _BaseApiUrl = conf.apiUrl;
 
 export const _WoodyPlantsList = `${_BaseApiUrl}/woodyPlants`;
 

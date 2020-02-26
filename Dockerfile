@@ -11,7 +11,13 @@ RUN yarn build
 
 # Stage 2 - the production environment
 FROM nginx:1.12-alpine
+
+COPY ./config/ /config/
+COPY ./run.sh /run.sh
+
 COPY ./config/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-deps /usr/src/app/build /usr/share/nginx/html
 EXPOSE 80
+
+ENTRYPOINT ["/run.sh"]
 CMD ["nginx", "-g", "daemon off;"]
