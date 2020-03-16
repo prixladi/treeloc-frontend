@@ -5,8 +5,6 @@ import * as serviceWorker from './serviceWorker';
 
 import 'antd/dist/antd.css';
 import './index.css';
-import './MapControls/index.css';
-import './Popups/MapFeaturePopup.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

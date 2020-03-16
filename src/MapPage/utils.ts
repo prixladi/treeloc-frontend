@@ -36,7 +36,7 @@ const getPointFeaturesFromList = (
       name: plant.localizedNames.czech,
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
-      imgUrl: plant.imageUrl
+      imgUrls: plant.imageUrls
     }
   }));
 };
@@ -61,7 +61,7 @@ const getLineFeaturesFromList = (
       name: plant.localizedNames.czech,
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
-      imgUrl: plant.imageUrl
+      imgUrls: plant.imageUrls
     }
   }));
 };
@@ -86,7 +86,7 @@ const getPolygonFeaturesFromList = (
       name: plant.localizedNames.czech,
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
-      imgUrl: plant.imageUrl
+      imgUrls: plant.imageUrls
     }
   }));
 };
@@ -129,7 +129,7 @@ export const setData = (map: L.Map, list: WoodyPlantListModel | null) => {
           name: feature.properties.name,
           species: feature.properties.species,
           note: feature.properties.note,
-          imgUrl: feature.properties.imgUrl
+          imgUrls: feature.properties.imgUrls
         })
       );
     }

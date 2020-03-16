@@ -20,7 +20,7 @@ import MapLogic from './MapLogic';
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
-  iconAnchor: [15, 47]
+  iconAnchor: [13, 47]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -43,7 +43,10 @@ const MapPage = () => {
       setMap: Dispatch<SetStateAction<L.Map | null>>;
       mapContainer: any;
     }) => {
-      const map = new L.Map(mapContainer.current, { tap: false });
+      const map = new L.Map(mapContainer.current, {
+        zoomControl: false,
+        tap: false
+      });
 
       map.setView(MapCenter, 9);
 
@@ -52,7 +55,7 @@ const MapPage = () => {
         attribution:
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
-      
+
       setMap(map);
     };
 

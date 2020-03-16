@@ -1,41 +1,70 @@
 import { WoodyPlantListModel } from '../Services/Models';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { getWoodyPlantsByFilterAsync } from '../Services/WoodyPlantsService';
 import { FindWoodyPlantsControl } from '../MapControls/FindWoodyPlantsControl';
 import L from 'leaflet';
 
 const control = new FindWoodyPlantsControl();
 
-export const useWoodyPlantsMapControl = (map: L.Map, coords: [number, number]) => {
-  var [list, setList] = useState(null as WoodyPlantListModel | null);
+export type WoodyPlantsData = {
+  list: WoodyPlantListModel | null;
+  loading: boolean;
+  controlOpen: boolean;
+};
+
+export const useWoodyPlantsMapControl = (
+  map: L.Map,
+  coords: [number, number]
+): [
+  WoodyPlantsData,
+  Dispatch<SetStateAction<boolean>>,
+  (take: number, coods: [number, number], distance?: number) => Promise<void>
+] => {
+  const [list, setList] = useState(null as WoodyPlantListModel | null);
+  const [loading, setLoading] = useState(false);
+  const [controlOpen, setControlOpen] = useState(false);
 
   const loadAsync = async (
-    skip: number,
     take: number,
-    coords: [number, number]
+    coords: [number, number],
+    distance?: number
   ): Promise<void> => {
-    setList(
-      await getWoodyPlantsByFilterAsync(
+    setLoading(true);
+    try {
+      const plants = await getWoodyPlantsByFilterAsync(
         {
-          skip: skip,
-          take: take,
-          point: { longitude: coords[1], latitude: coords[0] }
+          skip: 0,
+          take,
+          point: { longitude: coords[1], latitude: coords[0] },
+          distance
         },
         { ascending: true }
-      )
-    );
+      );
+
+      setList(plants);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     map.addControl(control);
-  }, [map])
+  }, [map]);
 
   useEffect(() => {
     control.onClickCallback = () => {
-      loadAsync(0, 100, coords);
+      setControlOpen(true);
     };
     // eslint-disable-next-line
   }, [coords]);
 
-  return list;
+  return [
+    {
+      list,
+      loading,
+      controlOpen
+    },
+    setControlOpen,
+    loadAsync
+  ];
 };

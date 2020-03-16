@@ -1,12 +1,12 @@
 type PopupData = {
   name?: string;
   species?: string;
-  imgUrl?: string;
+  imgUrls?: string[];
   note?: string;
 };
 
-const buildDescription = ({ name, species, imgUrl, note }: PopupData) => {
-  return `<p>${getName(name)}<br />${getSpecies(species)}</p>${getImg(imgUrl)}${getNote(
+const buildDescription = ({ name, species, imgUrls, note }: PopupData) => {
+  return `<p>${getName(name)}<br />${getSpecies(species)}</p>${getImg(imgUrls)}${getNote(
     note
   )}`;
 };
@@ -17,9 +17,9 @@ const getName = (name?: string) =>
 const getSpecies = (species?: string) =>
   species && species !== "null" ? `(<i>${species}</i>)` : '';
 
-const getImg = (imgUrl?: string) =>
-  imgUrl && imgUrl !== "null"
-    ? `<p><a href="${imgUrl}" target="_blank" title="Otevře se v novém okně">Obrázek dřeviny</a></ p>`
+const getImg = (imgUrls?: string[]) =>
+  imgUrls && imgUrls.length > 0 
+    ? `<p><a href="${imgUrls[0]}" target="_blank" title="Otevře se v novém okně">Obrázek dřeviny</a></ p>`
     : '';
 
 const getNote = (note?: string) => (note && note !== "null" ? `<p>${note}</p>` : '');

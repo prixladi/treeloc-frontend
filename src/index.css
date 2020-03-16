@@ -24,11 +24,12 @@ code {
   background-color: #135200;
 }
 
-.ant-input:focus{
+.ant-input:focus {
   border-color: #135200;
 }
 
-.ant-btn-primary {
+.ant-btn-primary,
+.ant-btn-primary:focus {
   background-color: #135200;
   border-color: #135200;
 }
@@ -43,4 +44,22 @@ code {
 .ant-menu-submenu-active,
 .ant-menu-submenu-title:hover {
   color: #ffffff;
+}
+
+a.leaflet-bar,
+a.leaflet-bar:hover,
+a.leaflet-control-zoom-in,
+a.leaflet-control-zoom-in:hover,
+a.leaflet-control-zoom-out,
+a.leaflet-control-zoom-out {
+  width: 3em;
+  height: 3em;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaflet-container.crosshair-cursor-enabled {
+  cursor:crosshair;
 }

@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { getWoodyPlantsByFilterAsync } from '../Services/WoodyPlantsService';
 
 export const useWoodyPlantsLoader = (
-  initialFilter: WoodyPlantFilterModel,
+  initialFilter?: WoodyPlantFilterModel,
   initialSort?: WoodyPlantSortModel
 ): [
   WoodyPlantListModel | null,
@@ -23,7 +23,7 @@ export const useWoodyPlantsLoader = (
   };
 
   useEffect(() => {
-    loadAsync(initialFilter, initialSort);
+    if (initialFilter) loadAsync(initialFilter, initialSort);
   }, [initialFilter, initialSort]);
 
   return [list, loadAsync];

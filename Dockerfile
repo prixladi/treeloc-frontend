@@ -3,6 +3,7 @@ FROM node:8 as build-deps
 WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
 RUN yarn
+
 COPY ./src/ ./src/
 COPY ./public/ ./public/
 COPY ./tsconfig.json ./tsconfig.json

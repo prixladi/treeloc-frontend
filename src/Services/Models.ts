@@ -32,7 +32,7 @@ export type WoodyPlantPreviewModel = {
     localizedNames: LocalizedStringModel
     localizedNotes: LocalizedStringModel
     localizedSpecies: LocalizedStringModel
-    imageUrl: string
+    imageUrls: string[]
     location?: Location
 };
 
