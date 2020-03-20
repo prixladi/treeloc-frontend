@@ -28,8 +28,8 @@ export const FindPlantsCard = ({
   return (
     <>
       <h2>Hledání dřevin</h2>
-      <Row>
-        <h4>Maximální vzdálenost (nejrychlejší vyhledávání pokud je "Neomezeno")</h4>
+      <Row style={{marginBottom:"1em"}}>
+        <h4>Maximální vzdálenost</h4>
         <Col span={14}>
           <Slider
             min={1}

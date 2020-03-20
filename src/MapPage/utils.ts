@@ -17,7 +17,8 @@ export const Sources = {
 };
 
 const getPointFeaturesFromList = (
-  list: WoodyPlantListModel | null
+  list: WoodyPlantListModel | null,
+  currentCoords: [number, number]
 ): GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>[] => {
   if (!list) return [];
 
@@ -36,13 +37,16 @@ const getPointFeaturesFromList = (
       name: plant.localizedNames.czech,
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
-      imgUrls: plant.imageUrls
+      imgUrls: plant.imageUrls,
+      currentCoords: currentCoords,
+      coords: (plant.location?.geometry as GeoJSON.Point).coordinates
     }
   }));
 };
 
 const getLineFeaturesFromList = (
-  list: WoodyPlantListModel | null
+  list: WoodyPlantListModel | null,
+  currentCoords: [number, number]
 ): GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>[] => {
   if (!list) return [];
 
@@ -61,13 +65,15 @@ const getLineFeaturesFromList = (
       name: plant.localizedNames.czech,
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
-      imgUrls: plant.imageUrls
+      imgUrls: plant.imageUrls,
+      currentCoords: currentCoords
     }
   }));
 };
 
 const getPolygonFeaturesFromList = (
-  list: WoodyPlantListModel | null
+  list: WoodyPlantListModel | null,
+  currentCoords: [number, number]
 ): GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>[] => {
   if (!list) return [];
 
@@ -86,7 +92,8 @@ const getPolygonFeaturesFromList = (
       name: plant.localizedNames.czech,
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
-      imgUrls: plant.imageUrls
+      imgUrls: plant.imageUrls,
+      currentCoords: currentCoords
     }
   }));
 };
@@ -96,22 +103,26 @@ let lineLayer: L.Layer | null = null;
 let polygonLayer: L.Layer | null = null;
 let deflated: any | null = null;
 
-export const setData = (map: L.Map, list: WoodyPlantListModel | null) => {
+export const setData = (
+  map: L.Map,
+  list: WoodyPlantListModel | null,
+  currentCoords: [number, number]
+) => {
   if (!list) return;
 
   const pointData = {
     type: 'FeatureCollection',
-    features: getPointFeaturesFromList(list)
+    features: getPointFeaturesFromList(list, currentCoords)
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
   const lineData = {
     type: 'FeatureCollection',
-    features: getLineFeaturesFromList(list)
+    features: getLineFeaturesFromList(list, currentCoords)
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
   const polygonData = {
     type: 'FeatureCollection',
-    features: getPolygonFeaturesFromList(list)
+    features: getPolygonFeaturesFromList(list, currentCoords)
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
   if (pointLayer) pointLayer.remove();
@@ -129,7 +140,9 @@ export const setData = (map: L.Map, list: WoodyPlantListModel | null) => {
           name: feature.properties.name,
           species: feature.properties.species,
           note: feature.properties.note,
-          imgUrls: feature.properties.imgUrls
+          imgUrls: feature.properties.imgUrls,
+          currentCoords: feature.properties.currentCoords,
+          coords: feature.properties.coords
         })
       );
     }
@@ -145,8 +158,15 @@ export const setData = (map: L.Map, list: WoodyPlantListModel | null) => {
     onEachFeature: onEachFeature
   });
 
-  lineLayer = L.geoJSON(lineData, { onEachFeature: onEachFeature });
-  polygonLayer = L.geoJSON(polygonData, { onEachFeature: onEachFeature });
+  lineLayer = L.geoJSON(lineData, {
+    style: { color: '#135200' },
+    onEachFeature: onEachFeature
+  });
+
+  polygonLayer = L.geoJSON(polygonData, {
+    style: { color: '#135200' },
+    onEachFeature: onEachFeature
+  });
 
   deflated = deflate();
 

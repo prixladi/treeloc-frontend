@@ -64,8 +64,6 @@ const useUserMapMarker = (
       setMarker(createMarker(map, [e.latlng.lat, e.latlng.lng]).addTo(map));
       setPositionMode(false);
       L.DomUtil.removeClass(map.getContainer(),'crosshair-cursor-enabled');
-
-      //map.flyTo([e.latlng.lat, e.latlng.lng]);
     };
 
     return registerOnClickHandle(map, handleOnClick);

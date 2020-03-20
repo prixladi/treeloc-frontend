@@ -19,7 +19,7 @@ export class SetPositionControl extends L.Control {
       this.onclick();
     };
     this.anchor.title = 'Nastavit pozici';
-    this.anchor.innerHTML = '<strong>P</strong>'
+    this.anchor.innerHTML = '<img src="/assets/circle.png" />';
   }
 
   getPosition(): L.ControlPosition {

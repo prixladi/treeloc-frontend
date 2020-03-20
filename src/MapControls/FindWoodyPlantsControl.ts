@@ -19,7 +19,7 @@ export class FindWoodyPlantsControl extends L.Control {
       this.onclick();
     };
     this.anchor.title = 'Najít dřeviny';
-    this.anchor.innerHTML = '<strong>N</strong>';
+    this.anchor.innerHTML = '<img src="/assets/tree.png" />';
   }
 
   getPosition(): L.ControlPosition {

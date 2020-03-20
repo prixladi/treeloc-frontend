@@ -32,12 +32,12 @@ const MapLogic = ({ map, coords }: Props) => {
   }, [coords]);
 
   useEffect(() => {
-    setData(map, data.list);
-  }, [map, data.list]);
+    setData(map, data.list, currentCoords);
+  }, [map, data.list, currentCoords]);
 
   useEffect(() => {
-    setData(map, data.list);
-  }, [map, data.list]);
+    setData(map, data.list, currentCoords);
+  }, [map, data.list, currentCoords]);
 
   return (
     <Modal
