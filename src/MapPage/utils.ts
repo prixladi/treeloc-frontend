@@ -66,7 +66,8 @@ const getLineFeaturesFromList = (
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
-      currentCoords: currentCoords
+      currentCoords: currentCoords,
+      coords: (plant.location?.geometry as GeoJSON.Point).coordinates[0]
     }
   }));
 };
@@ -93,7 +94,8 @@ const getPolygonFeaturesFromList = (
       species: plant.localizedSpecies.czech,
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
-      currentCoords: currentCoords
+      currentCoords: currentCoords,
+      coords: (plant.location?.geometry as GeoJSON.Point).coordinates[0]
     }
   }));
 };
