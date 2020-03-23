@@ -48,7 +48,7 @@ const MapPage = () => {
         tap: false
       });
 
-      map.setView(MapCenter, 9);
+      map.setView(MapCenter, 8);
 
       // 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
