@@ -14,7 +14,7 @@ interface Props extends GeolocatedProps {
 const MapLogic = ({ map, coords }: Props) => {
   const [currentCoords, setMarkerCoords] = useUserMapMarker(map);
   const [distance, setDistance] = useState(null as number | null);
-  const [count, setCount] = useState(100);
+  const [count, setCount] = useState(8000);
   const [data, setControlOpen, loadAsync] = useWoodyPlantsMapControl(
     map,
     currentCoords
@@ -26,14 +26,8 @@ const MapLogic = ({ map, coords }: Props) => {
     const currentCoords: [number, number] = [coords.latitude, coords.longitude];
     setMarkerCoords(currentCoords);
 
-    if (distance) loadAsync(count, currentCoords, distance / 6378);
-    else loadAsync(count, currentCoords);
-    // eslint-disable-next-line
+    setControlOpen(true);
   }, [coords]);
-
-  useEffect(() => {
-    setData(map, data.list, currentCoords);
-  }, [map, data.list, currentCoords]);
 
   useEffect(() => {
     setData(map, data.list, currentCoords);
@@ -47,7 +41,7 @@ const MapLogic = ({ map, coords }: Props) => {
       onOk={async () => {
         if (distance) loadAsync(count, currentCoords, distance / 6378);
         else loadAsync(count, currentCoords);
-        
+
         setControlOpen(false);
       }}
     >

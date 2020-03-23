@@ -58,7 +58,7 @@ export const FindPlantsCard = ({
         <Col span={14}>
           <Slider
             min={1}
-            max={400}
+            max={8000}
             onChange={(value: SliderValue) => setCount(value as number)}
             value={count}
             marks={countMarks}
@@ -67,7 +67,7 @@ export const FindPlantsCard = ({
         <Col span={4}>
           <InputNumber
             min={1}
-            max={400}
+            max={8000}
             style={{ marginLeft: "3em" }}
             value={count}
             onChange={(value: number | undefined) => setCount(value as number)}
