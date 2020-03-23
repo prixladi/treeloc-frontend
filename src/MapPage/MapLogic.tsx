@@ -6,6 +6,7 @@ import { useWoodyPlantsMapControl } from '../Hooks/WoodyPlantsMapControl';
 import { setData } from './utils';
 import { Modal } from 'antd';
 import { FindPlantsCard } from './FindPlantsCard';
+import { useSignalR } from '../Hooks/UseSignalR';
 
 interface Props extends GeolocatedProps {
   map: L.Map;
@@ -15,6 +16,7 @@ const MapLogic = ({ map, coords }: Props) => {
   const [currentCoords, setMarkerCoords] = useUserMapMarker(map);
   const [distance, setDistance] = useState(null as number | null);
   const [count, setCount] = useState(8000);
+  const version = useSignalR();
   const [data, setControlOpen, loadAsync] = useWoodyPlantsMapControl(
     map,
     currentCoords
@@ -27,11 +29,21 @@ const MapLogic = ({ map, coords }: Props) => {
     setMarkerCoords(currentCoords);
 
     setControlOpen(true);
+    // eslint-disable-next-line
   }, [coords]);
 
   useEffect(() => {
+    if (data.list && data.list.version !== version) {
+      if (distance) loadAsync(count, currentCoords, distance / 6378);
+      else loadAsync(count, currentCoords);
+    }
+  // eslint-disable-next-line
+  }, [version]);
+
+  useEffect(() => {
     setData(map, data.list, currentCoords);
-  }, [map, data.list, currentCoords]);
+  // eslint-disable-next-line
+  }, [map, data.list]);
 
   return (
     <Modal
@@ -39,8 +51,8 @@ const MapLogic = ({ map, coords }: Props) => {
       visible={data.controlOpen}
       onCancel={() => setControlOpen(false)}
       onOk={async () => {
-        if (distance) loadAsync(count, currentCoords, distance / 6378);
-        else loadAsync(count, currentCoords);
+        if (distance) await loadAsync(count, currentCoords, distance / 6378);
+        else await loadAsync(count, currentCoords);
 
         setControlOpen(false);
       }}

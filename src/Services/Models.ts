@@ -11,11 +11,15 @@ export type WoodyPlantFilterModel = {
   distance?: number;
 };
 
-export type SortBy = 'LocalizedNames' | 'LocalizedNotes' | 'LocalizedSpecies' | 'TextMatchScore';
+export type SortBy =
+  | 'LocalizedNames'
+  | 'LocalizedNotes'
+  | 'LocalizedSpecies'
+  | 'TextMatchScore';
 
 export type WoodyPlantSortModel = {
-  sortBy?: SortBy,
-  ascending: boolean
+  sortBy?: SortBy;
+  ascending: boolean;
 };
 
 export type LocalizedStringModel = {
@@ -23,24 +27,25 @@ export type LocalizedStringModel = {
 };
 
 export type Location = {
-  name?: string
-  geometry?: Omit<GeoJSON.Geometry, 'GeometryCollection' > 
-}
+  name?: string;
+  geometry?: Omit<GeoJSON.Geometry, 'GeometryCollection'>;
+};
 
 export type WoodyPlantPreviewModel = {
-    id: string
-    localizedNames: LocalizedStringModel
-    localizedNotes: LocalizedStringModel
-    localizedSpecies: LocalizedStringModel
-    imageUrls: string[]
-    location?: Location
+  id: string;
+  localizedNames: LocalizedStringModel;
+  localizedNotes: LocalizedStringModel;
+  localizedSpecies: LocalizedStringModel;
+  imageUrls: string[];
+  location?: Location;
 };
 
 export interface WoodyPlantDetailModel extends WoodyPlantPreviewModel {
-    imageUrl: string
+  imageUrl: string;
 }
 
 export type WoodyPlantListModel = {
   woodyPlants: WoodyPlantPreviewModel[];
   totalCount: number;
+  version?: string;
 };

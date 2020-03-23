@@ -16,7 +16,7 @@ const distanceMarks = {
 
 const countMarks = {
   1: '1',
-  400: '400'
+  8000: '8000'
 };
 
 export const FindPlantsCard = ({
