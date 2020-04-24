@@ -1,6 +1,6 @@
 import {
   WoodyPlantListModel,
-  WoodyPlantPreviewModel
+  WoodyPlantPreviewModel,
 } from '../Services/Models';
 
 import L from 'leaflet';
@@ -9,11 +9,12 @@ import 'Leaflet.Deflate';
 import { deflate } from './deflateUtils';
 import { treeIcon } from '../Common/MapConstants';
 import { buildDescription } from '../Popups/FeatureDescritionBuilder';
+import { GetFirstPositionFromPlant } from '../Common/Helpers';
 
 export const Sources = {
   _Points: 'points',
   _Lines: 'lines',
-  _Polygons: 'polygons'
+  _Polygons: 'polygons',
 };
 
 const getPointFeaturesFromList = (
@@ -30,7 +31,7 @@ const getPointFeaturesFromList = (
         plant.location?.geometry.type === 'MultiPoint')
   );
 
-  return filtered.map(plant => ({
+  return filtered.map((plant) => ({
     type: 'Feature',
     geometry: plant.location?.geometry as GeoJSON.Geometry,
     properties: {
@@ -39,8 +40,8 @@ const getPointFeaturesFromList = (
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
       currentCoords: currentCoords,
-      coords: (plant.location?.geometry as GeoJSON.Point).coordinates
-    }
+      coords: GetFirstPositionFromPlant(plant),
+    },
   }));
 };
 
@@ -58,7 +59,7 @@ const getLineFeaturesFromList = (
         plant.location?.geometry.type === 'MultiLineString')
   );
 
-  return filtered.map(plant => ({
+  return filtered.map((plant) => ({
     type: 'Feature',
     geometry: plant.location?.geometry as GeoJSON.Geometry,
     properties: {
@@ -67,8 +68,8 @@ const getLineFeaturesFromList = (
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
       currentCoords: currentCoords,
-      coords: (plant.location?.geometry as GeoJSON.Point).coordinates[0]
-    }
+      coords: GetFirstPositionFromPlant(plant),
+    },
   }));
 };
 
@@ -86,7 +87,7 @@ const getPolygonFeaturesFromList = (
         plant.location?.geometry.type === 'MultiPolygon')
   );
 
-  return filtered.map(plant => ({
+  return filtered.map((plant) => ({
     type: 'Feature',
     geometry: plant.location?.geometry as GeoJSON.Geometry,
     properties: {
@@ -95,8 +96,8 @@ const getPolygonFeaturesFromList = (
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
       currentCoords: currentCoords,
-      coords: (plant.location?.geometry as GeoJSON.Point).coordinates[0]
-    }
+      coords: GetFirstPositionFromPlant(plant),
+    },
   }));
 };
 
@@ -114,17 +115,17 @@ export const setData = (
 
   const pointData = {
     type: 'FeatureCollection',
-    features: getPointFeaturesFromList(list, currentCoords)
+    features: getPointFeaturesFromList(list, currentCoords),
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
   const lineData = {
     type: 'FeatureCollection',
-    features: getLineFeaturesFromList(list, currentCoords)
+    features: getLineFeaturesFromList(list, currentCoords),
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
   const polygonData = {
     type: 'FeatureCollection',
-    features: getPolygonFeaturesFromList(list, currentCoords)
+    features: getPolygonFeaturesFromList(list, currentCoords),
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
   if (pointLayer) pointLayer.remove();
@@ -144,7 +145,7 @@ export const setData = (
           note: feature.properties.note,
           imgUrls: feature.properties.imgUrls,
           currentCoords: feature.properties.currentCoords,
-          coords: feature.properties.coords
+          coords: feature.properties.coords,
         })
       );
     }
@@ -153,21 +154,21 @@ export const setData = (
   pointLayer = L.geoJSON(pointData, {
     pointToLayer: (_, yx) => {
       const marker = new L.Marker(yx, {
-        icon: treeIcon
+        icon: treeIcon,
       });
       return marker;
     },
-    onEachFeature: onEachFeature
+    onEachFeature: onEachFeature,
   });
 
   lineLayer = L.geoJSON(lineData, {
     style: { color: '#135200' },
-    onEachFeature: onEachFeature
+    onEachFeature: onEachFeature,
   });
 
   polygonLayer = L.geoJSON(polygonData, {
     style: { color: '#135200' },
-    onEachFeature: onEachFeature
+    onEachFeature: onEachFeature,
   });
 
   deflated = deflate();

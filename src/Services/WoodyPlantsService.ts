@@ -1,12 +1,34 @@
 import {
   WoodyPlantFilterModel,
   WoodyPlantListModel,
-  WoodyPlantSortModel
+  WoodyPlantSortModel,
+  WoodyPlantDetailModel
 } from './Models';
 import { getAsync } from '../Api';
-import { _WoodyPlantsList } from '../Api/Routes';
+import { _WoodyPlantsList, _WoodyPlantDetail } from '../Api/Routes';
 import { buildQuery } from './Utils';
 import { notification } from 'antd';
+
+
+export const getWoodyPlantByIdAsync = async (
+  id: string
+) : Promise<WoodyPlantDetailModel| null> => {
+  try {
+    var response = await getAsync({
+      url: `${_WoodyPlantDetail(id)}`
+    });
+
+    if (response.ok) return await response.json();
+
+    NotifyApiError();
+    const responseText = await response.text();
+    console.log(responseText);
+    return null;
+  } catch (error) {
+    NotifyApiError();
+    return null;
+  }
+}
 
 export const getWoodyPlantsByFilterAsync = async (
   filter: WoodyPlantFilterModel,

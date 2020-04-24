@@ -6,17 +6,28 @@ import { PaginationConfig, SorterResult } from 'antd/lib/table';
 import {
   SortBy,
   WoodyPlantFilterModel,
-  WoodyPlantSortModel
+  WoodyPlantSortModel,
 } from '../Services/Models';
-import { transformTableData, TableData, tryLoadAsync, getPagination } from './utils';
-import { GetNameColumn, GetSpeciesColumn, GetNoteColumn } from './Columns';
+import {
+  transformTableData,
+  TableData,
+  tryLoadAsync,
+  getPagination,
+} from './utils';
+import {
+  GetNameColumn,
+  GetSpeciesColumn,
+  GetNoteColumn,
+  GetActionsColumn,
+} from './Columns';
 import { ListSearch } from './ListSearch';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const pageSize: number = 14;
 const initialFilter: WoodyPlantFilterModel = { skip: 0, take: pageSize };
 const initialSort: WoodyPlantSortModel = { ascending: true };
 
-const ListPage: React.FC = () => {
+const ListPage = (props: RouteComponentProps) => {
   const [list, loadAsync] = useWoodyPlantsLoader(initialFilter, initialSort);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState(initialFilter);
@@ -36,12 +47,12 @@ const ListPage: React.FC = () => {
     const newFilter = {
       skip: newSkip,
       take: pagination.pageSize,
-      ...oldFilter
+      ...oldFilter,
     };
 
     const sort: WoodyPlantSortModel = {
       ascending: sorter.order === 'ascend',
-      sortBy: sorter.order && (sorter.columnKey as SortBy)
+      sortBy: sorter.order && (sorter.columnKey as SortBy),
     };
 
     setPage(pagination.current);
@@ -52,15 +63,16 @@ const ListPage: React.FC = () => {
   };
 
   const onTextSearchChangeAsync = async (search: string) => {
-    const { text, ...oldFilter } = filter;
-    const newFilter = { text: search, ...oldFilter };
+    const { text, skip, ...oldFilter } = filter;
+    const newFilter = { text: search, skip: 0, ...oldFilter };
 
     const sort: WoodyPlantSortModel = {
-      ascending: true
+      ascending: true,
     };
 
     setSort(sort);
     setFilter(newFilter);
+    setPage(1);
 
     await tryLoadAsync(newFilter, sort, setLoading, loadAsync);
   };
@@ -83,9 +95,10 @@ const ListPage: React.FC = () => {
         {GetNameColumn({ sort })}
         {GetSpeciesColumn({ sort })}
         {GetNoteColumn({ sort })}
+        {GetActionsColumn(props)}
       </Table>
     </Page>
   );
 };
 
-export default ListPage;
+export default withRouter(ListPage);

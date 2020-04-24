@@ -13,7 +13,6 @@ const createSetCoordsCallback = (
 ) => {
   return (newCoords: [number, number]) => {
     if (marker) marker.remove();
-    map.flyTo(newCoords);
     setMarker(new L.Marker(newCoords).addTo(map));
     setCoords(newCoords);
   };

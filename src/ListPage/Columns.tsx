@@ -1,6 +1,12 @@
 import React from 'react';
-import { WoodyPlantSortModel } from '../Services/Models';
+import {
+  WoodyPlantSortModel,
+  WoodyPlantPreviewModel,
+} from '../Services/Models';
 import Column from 'antd/lib/table/Column';
+import { Button } from 'antd';
+import { RouteComponentProps } from 'react-router-dom';
+import { _Map } from '../Routes';
 
 type ColumnProps = {
   sort: WoodyPlantSortModel;
@@ -41,5 +47,28 @@ export const GetNoteColumn = ({ sort }: ColumnProps) => (
     title='Poznámka'
     dataIndex='note'
     key='LocalizedNotes'
+  />
+);
+
+export const GetActionsColumn = ({ history }: RouteComponentProps) => (
+  <Column
+    title='Akce'
+    key='actions'
+    render={(model: WoodyPlantPreviewModel) => {
+      console.log(model);
+      if (model.location?.geometry)
+        return (
+          <>
+            <Button
+              onClick={() =>
+                history.push(`${_Map}?searchedPlantId=${model.id}`)
+              }
+              icon='search'
+            >
+              Zobrazit v mapě
+            </Button>
+          </>
+        );
+    }}
   />
 );

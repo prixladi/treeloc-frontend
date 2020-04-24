@@ -16,7 +16,8 @@ export const transformTableData = (
     id: woodyPlant.id,
     name: woodyPlant.localizedNames.czech ?? 'Nevyplněno',
     species: woodyPlant.localizedSpecies.czech ?? 'Nevyplněno',
-    note: woodyPlant.localizedNotes.czech ?? 'Nevyplněno'
+    note: woodyPlant.localizedNotes.czech ?? 'Nevyplněno',
+    location: woodyPlant.location
   }));
 };
 
