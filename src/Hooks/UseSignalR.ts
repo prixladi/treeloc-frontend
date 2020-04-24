@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   HubConnectionBuilder,
   HttpTransportType,
-  HubConnectionState
+  HubConnectionState,
 } from '@aspnet/signalr';
 
 declare const conf: { signalUrl: string };
@@ -11,7 +11,7 @@ const createHubConnection = () => {
   return new HubConnectionBuilder()
     .withUrl(conf.signalUrl, {
       skipNegotiation: true,
-      transport: HttpTransportType.WebSockets
+      transport: HttpTransportType.WebSockets,
     })
     .build();
 };
@@ -21,7 +21,7 @@ const useSignalR = () => {
   const [version, setVersion] = useState(null as string | null);
 
   useEffect(() => {
-    connection.on('versionChanged', args => {
+    connection.on('versionChanged', (args) => {
       setVersion(args.version);
     });
 
@@ -29,13 +29,21 @@ const useSignalR = () => {
       connection.start();
     } finally {
       const handle = setInterval(() => {
-        if (connection.state !== HubConnectionState.Connected)
-          connection.start();
+        try {
+          if (connection.state !== HubConnectionState.Connected)
+            connection.start();
+        } catch (err) {
+          console.log(err);
+        }
       }, 5000);
 
       return () => {
-        clearInterval(handle);
-        connection.stop();
+        try {
+          clearInterval(handle);
+          connection.stop();
+        } catch (err) {
+          console.log(err);
+        }
       };
     }
   }, [connection]);
