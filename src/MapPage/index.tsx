@@ -50,9 +50,7 @@ const MapPage = ({ location }: RouteComponentProps) => {
   const [plant, setPlant] = useState(null as WoodyPlantDetailModel | null);
   const [map, setMap] = useState(null as L.Map | null);
   const mapContainer = useRef(null as HTMLDivElement | null);
-
-  console.log(searchedPlantId);
-
+  
   const getSearchedWoodyPlant = async () => {
     if (searchedPlantId)
       setPlant(await getWoodyPlantByIdAsync(searchedPlantId));
@@ -78,10 +76,9 @@ const MapPage = ({ location }: RouteComponentProps) => {
 
       map.setView(MapCenter, 8);
 
-      // 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution:
-          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors | Icons from <a href="https://icons8.com">icons8.com</a>',
+          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, tilesets under <a href=" https://creativecommons.org/licenses/by/3.0/CC BY 3.0">CC BY 3.0</a> | Icons are from <a href="https://icons8.com">icons8.com</a>',
       }).addTo(map);
 
       setMap(map);

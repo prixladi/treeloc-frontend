@@ -55,7 +55,6 @@ export const GetActionsColumn = ({ history }: RouteComponentProps) => (
     title='Akce'
     key='actions'
     render={(model: WoodyPlantPreviewModel) => {
-      console.log(model);
       if (model.location?.geometry)
         return (
           <>
