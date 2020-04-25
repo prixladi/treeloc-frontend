@@ -19,6 +19,7 @@ FROM nginx:1.12-alpine
 
 COPY ./config/ /config/
 COPY --from=build-deps /run.sh /run.sh
+RUN chmod +x /run.sh
 COPY ./config/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-deps /usr/src/app/build /usr/share/nginx/html
 

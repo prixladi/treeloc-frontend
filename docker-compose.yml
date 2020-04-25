@@ -3,10 +3,11 @@ version: '3.4'
 services:
 
   frontend:
-    image: treeloc/frontend
+    image: treeloc/react
     ports:
       - "80:80"
     build:
       context: .
     environment:
-      RELEASE_ENV: "local"
+      API_URL: "http://localhost:4545/api/v1"
+      SIGNAL_URL: "http://localhost:4546/signalr"
