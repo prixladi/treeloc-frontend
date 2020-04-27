@@ -9,5 +9,5 @@ services:
     build:
       context: .
     environment:
-      API_URL: "http://localhost:4545/api/v1"
-      SIGNAL_URL: "http://localhost:4546/signalr"
+      API_URL: "http://localhost:4545/"
+      LOADER_URL: "http://localhost:4546/"

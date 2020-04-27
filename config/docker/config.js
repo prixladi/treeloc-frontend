@@ -1,1 +1,1 @@
-var conf = { apiUrl: "API_URL", signalUrl: "SIGNAL_URL" };
+var conf = { apiUrl: "API_URL/api/v1", signalUrl: "LOADER_URL/signalr" };

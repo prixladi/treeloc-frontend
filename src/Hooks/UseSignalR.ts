@@ -9,7 +9,7 @@ declare const conf: { signalUrl: string };
 
 const createHubConnection = () => {
   return new HubConnectionBuilder()
-    .withUrl(conf.signalUrl, {
+    .withUrl(conf.signalUrl.replace(/([^:])(\/\/+)/g, '$1/'), {
       skipNegotiation: true,
       transport: HttpTransportType.WebSockets,
     })
