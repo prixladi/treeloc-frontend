@@ -27,7 +27,7 @@ export const FindPlantsCard = ({
 }: Props) => {
   return (
     <>
-      <h2>Hledání dřevin</h2>
+      <h2>Nastavení vyhledávání</h2>
       <Row style={{marginBottom:"1em"}}>
         <h4>Maximální vzdálenost</h4>
         <Col span={14}>

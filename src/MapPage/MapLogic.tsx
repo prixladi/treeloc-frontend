@@ -27,26 +27,29 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
   );
 
   useEffect(() => {
-    if (searchedPlant) {
-      const pos = GetFirstPositionFromPlant(searchedPlant);
-      if (pos) {
-        map.flyTo([pos[1], pos[0]], 11);
-      }
-      setData(
-        map,
-        { woodyPlants: [searchedPlant], totalCount: 1 },
-        currentCoords
-      );
+    if (!searchedPlant) return;
+
+    const pos = GetFirstPositionFromPlant(searchedPlant);
+    if (pos) {
+      map.flyTo([pos[1], pos[0]], 11);
+      if (distance) loadAsync(count, [pos[1], pos[0]], distance / 6378);
+      else loadAsync(count, [pos[1], pos[0]]);
     }
-  // eslint-disable-next-line
-  }, [searchedPlant, map, coords]);
+
+    // eslint-disable-next-line
+  }, [searchedPlant, map]);
 
   useEffect(() => {
-    if (load) setControlOpen(true);
     if (!coords) return;
 
     const currentCoords: [number, number] = [coords.latitude, coords.longitude];
     setMarkerCoords(currentCoords);
+
+    if (load) {
+      if (distance) loadAsync(count, currentCoords, distance / 6378);
+      else loadAsync(count, currentCoords);
+    }
+
     // eslint-disable-next-line
   }, [coords]);
 
@@ -61,7 +64,12 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
   }, [version]);
 
   useEffect(() => {
-    setData(map, data.list, currentCoords);
+    if (!searchedPlant) setData(map, data.list, currentCoords);
+    else {
+      const pos = GetFirstPositionFromPlant(searchedPlant);
+      if (pos) setData(map, data.list, currentCoords, searchedPlant);
+      else setData(map, data.list, currentCoords);
+    }
     // eslint-disable-next-line
   }, [map, data.list]);
 
@@ -69,6 +77,8 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
     <Modal
       confirmLoading={data.loading}
       visible={data.controlOpen}
+      okText={'Hledat'}
+      cancelText={'Zrušit'}
       onCancel={() => setControlOpen(false)}
       onOk={async () => {
         setLoad(true);
