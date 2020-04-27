@@ -21,13 +21,11 @@ import { getWoodyPlantByIdAsync } from '../Services/WoodyPlantsService';
 import { WoodyPlantDetailModel } from '../Services/Models';
 import { isObjectId } from '../Common/Helpers';
 
-let DefaultIcon = L.icon({
+L.Marker.prototype.options.icon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
   iconAnchor: [13, 47],
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
+});;
 
 const styles: { width: string; height: string; position: 'absolute' } = {
   width: '100%',
@@ -41,53 +39,55 @@ const getSearchedPlantId = (search: string) => {
   const params = new URLSearchParams(search);
   var id = params.get('searchedPlantId');
 
-  if(id && isObjectId(id))
-    return id;
+  if (id && isObjectId(id)) return id;
+  
+  return null;
+};
+
+const initializeMap = (
+  setMap: Dispatch<SetStateAction<L.Map | null>>,
+  mapContainer: any,
+  plantId: string | null
+) => {
+  const map = new L.Map(mapContainer.current, {
+    zoomControl: false,
+    tap: false,
+  });
+
+  map.setView(MapCenter, plantId ? 12 : 8);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, tilesets under <a href=" https://creativecommons.org/licenses/by/3.0/CC BY 3.0">CC BY 3.0</a> | Icons are from <a href="https://icons8.com">icons8.com</a>',
+  }).addTo(map);
+
+  setMap(map);
 };
 
 const MapPage = ({ location }: RouteComponentProps) => {
-  const [searchedPlantId] = useState(getSearchedPlantId(location.search));
+  const [plantId, setPlantId] = useState(getSearchedPlantId(location.search));
   const [plant, setPlant] = useState(null as WoodyPlantDetailModel | null);
   const [map, setMap] = useState(null as L.Map | null);
   const mapContainer = useRef(null as HTMLDivElement | null);
-  
-  const getSearchedWoodyPlant = async () => {
-    if (searchedPlantId)
-      setPlant(await getWoodyPlantByIdAsync(searchedPlantId));
-  };
 
   useEffect(() => {
-    getSearchedWoodyPlant();
-    // eslint-disable-next-line
-  }, [searchedPlantId]);
-
-  useEffect(() => {
-    const initializeMap = ({
-      setMap,
-      mapContainer,
-    }: {
-      setMap: Dispatch<SetStateAction<L.Map | null>>;
-      mapContainer: any;
-    }) => {
-      const map = new L.Map(mapContainer.current, {
-        zoomControl: false,
-        tap: false,
-      });
-
-      map.setView(MapCenter,  searchedPlantId ? 12 : 8);
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, tilesets under <a href=" https://creativecommons.org/licenses/by/3.0/CC BY 3.0">CC BY 3.0</a> | Icons are from <a href="https://icons8.com">icons8.com</a>',
-      }).addTo(map);
-
-      setMap(map);
+    const getSearchedWoodyPlant = async () => {
+      if (plantId) {
+        const plant = await getWoodyPlantByIdAsync(plantId);
+        if (plant) setPlant(plant);
+        else setPlantId(null);
+      }
     };
 
-    if (!map) initializeMap({ setMap, mapContainer });
-  }, [map]);
+    getSearchedWoodyPlant();
+    // eslint-disable-next-line
+  }, [plantId]);
 
-  if (!map || (searchedPlantId && !plant))
+  useEffect(() => {
+    if (!map) initializeMap(setMap, mapContainer, plantId);
+  }, [map, plantId]);
+
+  if (!map || (plantId && !plant))
     return <div ref={(el) => (mapContainer.current = el)} style={styles} />;
 
   if (plant)

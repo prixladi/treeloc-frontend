@@ -54,11 +54,19 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
   }, [coords]);
 
   useEffect(() => {
-    if (!load) return;
-
-    if (data.list && data.list.version !== version) {
-      if (distance) loadAsync(count, currentCoords, distance / 6378);
-      else loadAsync(count, currentCoords);
+    if (load) {
+      if (data.list && data.list.version !== version) {
+        if (distance) loadAsync(count, currentCoords, distance / 6378);
+        else loadAsync(count, currentCoords);
+      }
+    }
+    else if(searchedPlant)
+    {
+      const pos = GetFirstPositionFromPlant(searchedPlant);
+      if (pos && data.list && data.list.version !== version) {
+        if (distance) loadAsync(count, [pos[1], pos[0]], distance / 6378);
+        else loadAsync(count, [pos[1], pos[0]]);
+      }
     }
     // eslint-disable-next-line
   }, [version]);
@@ -67,7 +75,13 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
     if (!searchedPlant) setData(map, data.list, currentCoords);
     else {
       const pos = GetFirstPositionFromPlant(searchedPlant);
-      if (pos) setData(map, data.list, currentCoords, searchedPlant);
+      if (pos)
+        setData(
+          map,
+          data.list,
+          currentCoords,
+          !load ? searchedPlant : undefined
+        );
       else setData(map, data.list, currentCoords);
     }
     // eslint-disable-next-line
@@ -104,5 +118,3 @@ export const GeolocatedLogic = geolocated({
     enableHighAccuracy: true,
   },
 })(MapLogic);
-
-export const PlainLogic = MapLogic;

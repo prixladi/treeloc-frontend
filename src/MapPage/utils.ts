@@ -110,12 +110,15 @@ const getPolygonFeaturesFromList = (
 
 const getSearchedFeature = (
   searchedPlant: WoodyPlantDetailModel | undefined,
+  list: WoodyPlantListModel | null,
   currentCoords: [number, number]
 ): GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>[] => {
   if (
+    !list ||
     !searchedPlant ||
     !searchedPlant.location ||
-    !searchedPlant.location?.geometry
+    !searchedPlant.location?.geometry ||
+    !list.woodyPlants.some((x) => x.id === searchedPlant.id)
   )
     return [];
 
@@ -244,6 +247,7 @@ let lineLayer: L.Layer | null = null;
 let polygonLayer: L.Layer | null = null;
 let searchedLayer: L.Layer | null = null;
 let deflated: any | null = null;
+let cachedSearchedPlant: WoodyPlantDetailModel | undefined;
 
 export const setData = (
   map: L.Map,
@@ -272,10 +276,29 @@ export const setData = (
     ),
   } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
 
-  const searchedData = {
-    type: 'FeatureCollection',
-    features: getSearchedFeature(searchedPlant, currentCoords),
-  } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
+  let searchedData;
+  if (
+    !searchedPlant ||
+    !cachedSearchedPlant ||
+    cachedSearchedPlant?.id !== searchedPlant?.id
+  ) {
+    searchedData = {
+      type: 'FeatureCollection',
+      features: getSearchedFeature(searchedPlant, list, currentCoords),
+    } as GeoJSON.FeatureCollection<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>;
+
+    if (searchedData.features.length > 0) cachedSearchedPlant = searchedPlant;
+
+    if (searchedLayer) searchedLayer.remove();
+  }
+
+  if (
+    searchedPlant &&
+    searchedLayer &&
+    !list.woodyPlants.some((x) => x.id === searchedPlant.id)
+  ) {
+    searchedLayer.remove();
+  }
 
   if (pointLayer) pointLayer.remove();
   if (lineLayer) lineLayer.remove();
@@ -285,14 +308,14 @@ export const setData = (
   pointLayer = getPointLayer(pointData);
   lineLayer = getLineLayer(lineData);
   polygonLayer = getPolygonLayer(polygonData);
-  searchedLayer = getSearchedLayer(searchedData, map);
+  if (searchedData) searchedLayer = getSearchedLayer(searchedData, map);
 
   deflated = deflate();
 
   if (pointData.features.length > 0) pointLayer.addTo(deflated);
   if (lineData.features.length > 0) lineLayer.addTo(deflated);
   if (polygonData.features.length > 0) polygonLayer.addTo(deflated);
-  if (searchedPlant) searchedLayer.addTo(map);
+  if (searchedPlant && searchedLayer) searchedLayer.addTo(map);
 
   deflated.addTo(map);
 };
