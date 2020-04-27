@@ -74,7 +74,7 @@ const MapPage = ({ location }: RouteComponentProps) => {
         tap: false,
       });
 
-      map.setView(MapCenter, 8);
+      map.setView(MapCenter,  searchedPlantId ? 12 : 8);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution:

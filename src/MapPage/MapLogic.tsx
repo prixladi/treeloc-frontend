@@ -31,7 +31,7 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
 
     const pos = GetFirstPositionFromPlant(searchedPlant);
     if (pos) {
-      map.flyTo([pos[1], pos[0]], 11);
+      map.panTo([pos[1], pos[0]]);
       if (distance) loadAsync(count, [pos[1], pos[0]], distance / 6378);
       else loadAsync(count, [pos[1], pos[0]]);
     }
