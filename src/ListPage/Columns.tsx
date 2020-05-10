@@ -24,7 +24,7 @@ export const GetNameColumn = ({ sort }: ColumnProps) => (
   <Column
     sorter
     sortOrder={getSortOrder('LocalizedNames', sort)}
-    title='Jméno'
+    title='Název'
     dataIndex='name'
     key='LocalizedNames'
   />

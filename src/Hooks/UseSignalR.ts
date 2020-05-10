@@ -27,6 +27,8 @@ const useSignalR = () => {
 
     try {
       connection.start();
+    } catch (err) {
+      console.log(err);
     } finally {
       const handle = setInterval(() => {
         try {
