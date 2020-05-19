@@ -10,7 +10,7 @@ import 'Leaflet.Deflate';
 import { deflate } from './deflateUtils';
 import { treeIcon } from '../Common/MapConstants';
 import { buildDescription } from '../Popups/FeatureDescritionBuilder';
-import { GetFirstPositionFromPlant } from '../Common/Helpers';
+import { getFirstPositionFromPlant } from '../Common/Helpers';
 
 export const Sources = {
   _Points: 'points',
@@ -43,7 +43,7 @@ const getPointFeaturesFromList = (
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
       currentCoords: currentCoords,
-      coords: GetFirstPositionFromPlant(plant),
+      coords: getFirstPositionFromPlant(plant),
     },
   }));
 };
@@ -73,7 +73,7 @@ const getLineFeaturesFromList = (
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
       currentCoords: currentCoords,
-      coords: GetFirstPositionFromPlant(plant),
+      coords: getFirstPositionFromPlant(plant),
     },
   }));
 };
@@ -103,7 +103,7 @@ const getPolygonFeaturesFromList = (
       note: plant.localizedNotes.czech,
       imgUrls: plant.imageUrls,
       currentCoords: currentCoords,
-      coords: GetFirstPositionFromPlant(plant),
+      coords: getFirstPositionFromPlant(plant),
     },
   }));
 };
@@ -132,7 +132,7 @@ const getSearchedFeature = (
         note: searchedPlant.localizedNotes.czech,
         imgUrls: searchedPlant.imageUrls,
         currentCoords: currentCoords,
-        coords: GetFirstPositionFromPlant(searchedPlant),
+        coords: getFirstPositionFromPlant(searchedPlant),
       },
     },
   ];

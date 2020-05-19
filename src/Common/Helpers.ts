@@ -2,7 +2,7 @@ import { WoodyPlantPreviewModel } from '../Services/Models';
 
 export const isObjectId = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id);
 
-export const GetFirstPositionFromPlant = (
+export const getFirstPositionFromPlant = (
   model: WoodyPlantPreviewModel
 ): GeoJSON.Position | null => {
   switch (model.location?.geometry?.type) {

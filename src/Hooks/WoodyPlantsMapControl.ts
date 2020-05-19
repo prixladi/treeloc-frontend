@@ -18,7 +18,7 @@ export const useWoodyPlantsMapControl = (
 ): [
   WoodyPlantsData,
   Dispatch<SetStateAction<boolean>>,
-  (take: number, coods: [number, number], distance?: number) => Promise<void>
+  (take: number, coods: [number, number], distance?: number | null) => Promise<void>
 ] => {
   const [list, setList] = useState(null as WoodyPlantListModel | null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ export const useWoodyPlantsMapControl = (
   const loadAsync = async (
     take: number,
     coords: [number, number],
-    distance?: number
+    distance?: number | null
   ): Promise<void> => {
     setLoading(true);
     try {

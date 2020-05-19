@@ -8,7 +8,7 @@ export type WoodyPlantFilterModel = {
   take: number;
   text?: string;
   point?: PointModel;
-  distance?: number;
+  distance?: number | null;
 };
 
 export type SortBy =

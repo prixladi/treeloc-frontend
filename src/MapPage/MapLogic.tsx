@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import L from 'leaflet';
+
 import { useUserMapMarker } from '../Hooks/UserMapMarker';
 import { geolocated, GeolocatedProps } from 'react-geolocated';
-import L from 'leaflet';
 import { useWoodyPlantsMapControl } from '../Hooks/WoodyPlantsMapControl';
-import { setData } from './utils';
 import { Modal } from 'antd';
 import { FindPlantsCard } from './FindPlantsCard';
 import { useSignalR } from '../Hooks/UseSignalR';
 import { WoodyPlantDetailModel } from '../Services/Models';
-import { GetFirstPositionFromPlant } from '../Common/Helpers';
+import * as Effects from './Effects';
 
 interface Props extends GeolocatedProps {
   map: L.Map;
-  searchedPlant?: WoodyPlantDetailModel;
+  searchedPlant: WoodyPlantDetailModel | null;
 }
 
 const MapLogic = ({ map, coords, searchedPlant }: Props) => {
@@ -20,72 +20,41 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
   const [currentCoords, setMarkerCoords] = useUserMapMarker(map);
   const [distance, setDistance] = useState(null as number | null);
   const [count, setCount] = useState(8000);
-  const version = useSignalR();
   const [data, setControlOpen, loadAsync] = useWoodyPlantsMapControl(
     map,
     currentCoords
   );
+  const version = useSignalR();
 
-  useEffect(() => {
-    if (!searchedPlant) return;
+  Effects.useSearcherWoodyPlantMapEffect(
+    map,
+    searchedPlant,
+    distance,
+    count,
+    loadAsync
+  );
 
-    const pos = GetFirstPositionFromPlant(searchedPlant);
-    if (pos) {
-      map.panTo([pos[1], pos[0]]);
-      if (distance) loadAsync(count, [pos[1], pos[0]], distance / 6378);
-      else loadAsync(count, [pos[1], pos[0]]);
-    }
+  Effects.useCurrentCoordsEffect(
+    coords,
+    distance,
+    count,
+    setMarkerCoords,
+    load,
+    loadAsync
+  );
 
-    // eslint-disable-next-line
-  }, [searchedPlant, map]);
+  Effects.useVersionChangedEffect(
+    version,
+    load,
+    distance,
+    count,
+    data,
+    currentCoords,
+    searchedPlant,
+    loadAsync
+  );
 
-  useEffect(() => {
-    if (!coords) return;
-
-    const currentCoords: [number, number] = [coords.latitude, coords.longitude];
-    setMarkerCoords(currentCoords);
-
-    if (load) {
-      if (distance) loadAsync(count, currentCoords, distance / 6378);
-      else loadAsync(count, currentCoords);
-    }
-
-    // eslint-disable-next-line
-  }, [coords]);
-
-  useEffect(() => {
-    if (load) {
-      if (data.list && data.list.version !== version) {
-        if (distance) loadAsync(count, currentCoords, distance / 6378);
-        else loadAsync(count, currentCoords);
-      }
-    }
-    else if(searchedPlant)
-    {
-      const pos = GetFirstPositionFromPlant(searchedPlant);
-      if (pos && data.list && data.list.version !== version) {
-        if (distance) loadAsync(count, [pos[1], pos[0]], distance / 6378);
-        else loadAsync(count, [pos[1], pos[0]]);
-      }
-    }
-    // eslint-disable-next-line
-  }, [version]);
-
-  useEffect(() => {
-    if (!searchedPlant) setData(map, data.list, currentCoords);
-    else {
-      const pos = GetFirstPositionFromPlant(searchedPlant);
-      if (pos)
-        setData(
-          map,
-          data.list,
-          currentCoords,
-          !load ? searchedPlant : undefined
-        );
-      else setData(map, data.list, currentCoords);
-    }
-    // eslint-disable-next-line
-  }, [map, data.list]);
+  Effects.useDataChangedEffect(map, load, data, currentCoords, searchedPlant);
 
   return (
     <Modal
@@ -96,10 +65,7 @@ const MapLogic = ({ map, coords, searchedPlant }: Props) => {
       onCancel={() => setControlOpen(false)}
       onOk={async () => {
         setLoad(true);
-
-        if (distance) await loadAsync(count, currentCoords, distance / 6378);
-        else await loadAsync(count, currentCoords);
-
+        await loadAsync(count, currentCoords, distance);
         setControlOpen(false);
       }}
     >

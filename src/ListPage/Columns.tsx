@@ -20,7 +20,7 @@ const getSortOrder = (key: string, sort: WoodyPlantSortModel) => {
     : undefined;
 };
 
-export const GetNameColumn = ({ sort }: ColumnProps) => (
+export const getNameColumn = ({ sort }: ColumnProps) => (
   <Column
     sorter
     sortOrder={getSortOrder('LocalizedNames', sort)}
@@ -30,7 +30,7 @@ export const GetNameColumn = ({ sort }: ColumnProps) => (
   />
 );
 
-export const GetSpeciesColumn = ({ sort }: ColumnProps) => (
+export const getSpeciesColumn = ({ sort }: ColumnProps) => (
   <Column
     sorter
     sortOrder={getSortOrder('LocalizedSpecies', sort)}
@@ -40,7 +40,7 @@ export const GetSpeciesColumn = ({ sort }: ColumnProps) => (
   />
 );
 
-export const GetNoteColumn = ({ sort }: ColumnProps) => (
+export const getNoteColumn = ({ sort }: ColumnProps) => (
   <Column
     sorter
     sortOrder={getSortOrder('LocalizedNotes', sort)}
@@ -50,7 +50,7 @@ export const GetNoteColumn = ({ sort }: ColumnProps) => (
   />
 );
 
-export const GetActionsColumn = ({ history }: RouteComponentProps) => (
+export const getActionsColumn = ({ history }: RouteComponentProps) => (
   <Column
     title='Akce'
     key='actions'

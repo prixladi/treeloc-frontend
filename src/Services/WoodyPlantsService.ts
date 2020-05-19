@@ -6,8 +6,8 @@ import {
 } from './Models';
 import { getAsync } from '../Api';
 import { _WoodyPlantsList, _WoodyPlantDetail } from '../Api/Routes';
-import { buildQuery } from './Utils';
 import { notification } from 'antd';
+import { buildQuery } from './utils';
 
 export const getWoodyPlantByIdAsync = async (
   id: string
