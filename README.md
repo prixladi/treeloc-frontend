@@ -1,35 +1,35 @@
 # Treeloc frontend
 
-Pro korektní běh aplikace je potřeba mít spuštěný [Treeloc Backend](https://github.com/prixladi/treeloc-backend).
+For full experience [Treeloc Backend](https://github.com/prixladi/treeloc-backend) should be running on developement machine.
 
-# Spuštění projektu
+# Launching the project
 
 ## Docker (docker-compose)
 
-Spuštění projektu pomocí `docker-compose up`
+Start the project using `docker-compose up`
 
-Vytvoření nových imagů a spuštění projektu pomocí `docker-compose up --build`
+Create new images and start the project using `docker-compose up --build`
 
-Služba *frontend* poběží na portu **80**. Mapování portů se dá změnit v souboru **./docker-compose.yml**.
+**Frontend** service should be running on port **80**. Port mapping can be changed in the **./docker-compose.yml** file.
 
-[Dokumentace docker-compose.](https://docs.docker.com/compose/)
+[docker-compose documentation.](https://docs.docker.com/compose/)
 
 ---
 
 ## Yarn
 
-Inicializace projektu pomocí `yarn`
+Project init `yarn`
 
-Spuštění projektu pomocí `yarn start`
+Project launch `yarn start`
 
-Aplikace se spustí na portu **3000** pokud je dostupný. V případě že není dostupný vyzkouší další v pořadí **3001** atd..
+App should be running on port **3000**.
 
 ---
 
-# Proměnné prostředí
-Proměnné prostředí se dají změnit editací souboru **./docker-compose.yml**.
+# Environment variables
+Environment variables can be changed in the **./docker-compose.yml** file.
 
-|Název|Povinná|Popis|
+|Name|Optional|Description|
 |---|---|---|
-|API_URL|ano|Adresa **Api** služby (viz. [Treeloc Backend](https://github.com/prixladi/treeloc-backend))|
-|LOADER_URL|ano|Adresa **Loader** služby (viz. [Treeloc Backend](https://github.com/prixladi/treeloc-backend))|
+|API_URL|no| **Api** Service address|
+|LOADER_URL|no| **Loader** Service address|
