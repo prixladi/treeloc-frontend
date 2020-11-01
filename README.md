@@ -2,6 +2,8 @@
 
 For full experience [Treeloc Backend](https://github.com/prixladi/treeloc-backend) should be running on developement machine.
 
+[Project repository](https://github.com/prixladi/treeloc/).
+
 # Launching the project
 
 ## Docker (docker-compose)
